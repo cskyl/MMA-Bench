@@ -1,28 +1,204 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Some Modalities are More Equal Than Others: Decoding and Architecting Multimodal Integration in MLLMs</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            padding-top: 20vh;
-            background: #fafafa;
-            color: #333;
-        }
-        h1 {
-            font-size: 2.5rem;
-        }
-        p {
-            font-size: 1.2rem;
-            margin-top: 10px;
-            color: #666;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <title>MMA-Bench: Some Modalities are More Equal Than Others</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg-start: #050816;
+      --bg-end: #9b5b34;
+      --accent: #f5c96b;
+      --accent-soft: rgba(245, 201, 107, 0.12);
+      --text-main: #fdfaf5;
+      --text-soft: #d8d1c5;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top left, var(--bg-start) 0%, #071a2f 50%, var(--bg-end) 100%);
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 16px;
+    }
+    .hero {
+      max-width: 1100px;
+      width: 100%;
+      display: flex;
+      gap: 32px;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .hero-text {
+      flex: 1.1;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 0.8rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .pill-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 12px rgba(245, 201, 107, 0.7);
+    }
+    h1 {
+      font-size: clamp(2.3rem, 3vw + 1rem, 3rem);
+      line-height: 1.1;
+      margin-bottom: 10px;
+    }
+    h1 span.highlight {
+      color: var(--accent);
+    }
+    .subtitle {
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: var(--text-soft);
+      margin-bottom: 18px;
+    }
+    .summary {
+      font-size: 0.95rem;
+      color: var(--text-soft);
+      max-width: 32rem;
+      line-height: 1.5;
+      margin-bottom: 18px;
+    }
+    .bullets {
+      list-style: none;
+      font-size: 0.9rem;
+      color: var(--text-soft);
+      margin-bottom: 22px;
+    }
+    .bullets li {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+    .bullets li::before {
+      content: "•";
+      color: var(--accent);
+      margin-top: 1px;
+    }
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .btn {
+      border: none;
+      border-radius: 999px;
+      padding: 8px 16px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      background: var(--accent);
+      color: #3b2a09;
+      cursor: not-allowed; /* WIP */
+      opacity: 0.8;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn span.badge {
+      font-size: 0.7rem;
+      padding: 2px 6px;
+      border-radius: 999px;
+      background: #3b2a09;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .hero-image {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+    }
+    .hero-image img {
+      max-width: 100%;
+      border-radius: 18px;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      object-fit: cover;
+    }
+    .footer {
+      position: fixed;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.6);
+      text-align: center;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(12px);
+    }
+    @media (max-width: 880px) {
+      body { padding-top: 40px; padding-bottom: 72px; }
+      .hero { flex-direction: column-reverse; align-items: stretch; }
+      .hero-image img { max-width: 420px; width: 100%; }
+      .hero-text { text-align: left; }
+    }
+  </style>
 </head>
 <body>
-    <h1>Some Modalities are More Equal Than Others: Decoding and Architecting Multimodal Integration in MLLMs</h1>
-    <p>Work in progress…</p>
+  <main class="hero">
+    <section class="hero-image">
+      <!-- Replace hero.png with your own image filename -->
+      <img src="hero.png" alt="MMA-Bench teaser image" />
+    </section>
+
+    <section class="hero-text">
+      <div class="pill">
+        <span class="pill-dot"></span>
+        <span>Project page • Work in progress</span>
+      </div>
+
+      <h1>
+        Some <span class="highlight">Modalities</span> are More Equal Than Others
+      </h1>
+      <div class="subtitle">
+        Decoding and Architecting Multimodal Integration in MLLMs
+      </div>
+
+      <p class="summary">
+        We introduce <strong>MMA-Bench</strong> to probe how modern multimodal LLMs behave when
+        sight, sound, and language conflict. Using both black-box and white-box analysis,
+        we expose brittle modality integration and show how alignment-aware tuning leads
+        to stronger cross-modal grounding and more reliable reasoning. :contentReference[oaicite:0]{index=0}
+      </p>
+
+      <ul class="bullets">
+        <li>Benchmark controlled audio–video–text conflicts and unimodal ablations.</li>
+        <li>Diagnose modality bias via performance and attention patterns.</li>
+        <li>Teach models when to prioritize, leverage, or ignore specific modalities.</li>
+        <li>Move towards MLLMs with intrinsically reliable cross-modal reasoning.</li>
+      </ul>
+
+      <div class="buttons">
+        <button class="btn">Paper <span class="badge">Soon</span></button>
+        <button class="btn">Code <span class="badge">Soon</span></button>
+        <button class="btn">Data <span class="badge">Soon</span></button>
+        <button class="btn">MMA-Bench <span class="badge">Soon</span></button>
+      </div>
+    </section>
+  </main>
+
+  <div class="footer">
+    CVPR 2026 Submission • MMA-Bench · Multimodal Alignment Benchmark (WIP)
+  </div>
 </body>
 </html>
