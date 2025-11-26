@@ -6,72 +6,701 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta
     name="description"
-    content="MMA-Bench: probing and improving modality integration in multimodal LLMs. Project page - work in progress."
+    content="MMA-Bench: Decoding and architecting multimodal integration in MLLMs via controlled modality conflicts, interpretability, and alignment-aware tuning."
   />
   <link rel="stylesheet" href="assets/css/style.css" />
 </head>
 <body>
-  <header class="site-header">
-    <div class="site-logo">MMA-Bench</div>
-    <nav class="site-nav">
-      <span class="nav-pill nav-pill--wip">Work in Progress</span>
+  <!-- Top navigation -->
+  <header class="top-nav">
+    <div class="brand">
+      <span class="brand-mark"></span>
+      <span class="brand-text">MMA-Bench</span>
+    </div>
+    <nav class="nav-links">
+      <a href="#overview">Overview</a>
+      <a href="#mma-bench">Benchmark</a>
+      <a href="#dataset-pipeline">Dataset</a>
+      <a href="#results">Results</a>
+      <a href="#whitebox">White-Box</a>
+      <a href="#alignment">Alignment</a>
+      <a href="#demos">Demos</a>
+      <a href="#resources">Resources</a>
+      <span class="nav-pill">Work in Progress</span>
     </nav>
   </header>
 
-  <main class="hero">
-    <section class="hero-text">
-      <div class="pill">
-        <span class="pill-dot" aria-hidden="true"></span>
-        <span>Project page · Work in progress</span>
+  <!-- HERO -->
+  <section id="overview" class="hero">
+    <div class="hero-inner">
+      <div class="hero-text">
+        <div class="pill">
+          <span class="pill-dot" aria-hidden="true"></span>
+          <span>CVPR 2026 Submission · Project Page · WIP</span>
+        </div>
+
+        <h1>
+          Some <span class="highlight">Modalities</span> are More Equal Than Others
+        </h1>
+
+        <p class="hero-subtitle">
+          Decoding and architecting <strong>multimodal integration</strong> in large language models
+          under audio–video–text conflicts.
+        </p>
+
+        <p class="hero-summary">
+          <strong>MMA-Bench</strong> probes how modern multimodal LLMs behave when sight, sound,
+          and language disagree. We construct a controlled benchmark, analyze black-box behavior
+          and white-box attention patterns, and propose an
+          <strong>alignment-aware tuning</strong> strategy that yields stronger modality grounding
+          and more reliable cross-modal reasoning.
+        </p>
+
+        <div class="hero-contribs">
+          <div class="contrib-item">
+            <h3>Benchmark</h3>
+            <p>Audio–video–text conflicts with paired visual &amp; audio questions per clip.</p>
+          </div>
+          <div class="contrib-item">
+            <h3>Diagnostics</h3>
+            <p>Black-box robustness tests + layer/head-wise attention analysis.</p>
+          </div>
+          <div class="contrib-item">
+            <h3>Alignment Tuning</h3>
+            <p>Modality-selective fine-tuning that teaches models when to trust which cue.</p>
+          </div>
+        </div>
+
+        <div class="hero-buttons">
+          <button class="btn" disabled>Paper<span class="badge">Soon</span></button>
+          <button class="btn" disabled>Code<span class="badge">Soon</span></button>
+          <button class="btn" disabled>Data<span class="badge">Soon</span></button>
+          <button class="btn" disabled>MMA-Bench<span class="badge">Soon</span></button>
+        </div>
       </div>
 
-      <h1>
-        Some <span class="highlight">Modalities</span> are More Equal Than Others
-      </h1>
+      <div class="hero-media">
+        <div class="hero-image-frame">
+          <img src="assets/img/hero.png" alt="Illustration of conflicting audio–video–text scenarios in MMA-Bench" />
+        </div>
+      </div>
+    </div>
+  </section>
 
-      <p class="subtitle">
-        Decoding and architecting reliable multimodal integration in large language models.
+  <!-- AUTHORS PLACEHOLDER -->
+  <section class="authors">
+    <div class="authors-inner">
+      <p class="authors-title">Authors</p>
+      <p class="authors-list">
+        <span class="authors-placeholder">
+          To be updated after camera-ready (currently anonymized for review).
+        </span>
       </p>
-
-      <p class="summary">
-        <strong>MMA-Bench</strong> is a benchmark and analysis suite for stress-testing
-        audio–video–text reasoning. We combine controlled misalignment setups, black-box
-        evaluation, and white-box attention analysis to understand when models over-trust,
-        under-use, or correctly balance different modalities.
+      <p class="authors-affiliation">
+        <span>Affiliations · Institution(s) Here</span>
       </p>
+    </div>
+  </section>
 
-      <ul class="bullets">
-        <li>Probe modality bias with aligned vs. misaligned audio-video-text scenarios.</li>
-        <li>Analyze layer- and head-wise attention to reveal where fusion actually happens.</li>
-        <li>Design training recipes that encourage robust cross-modal reasoning.</li>
-      </ul>
+  <!-- MAIN CONTENT -->
+  <main class="page-main">
+    <!-- MMA-BENCH -->
+    <section id="mma-bench" class="section">
+      <div class="section-header">
+        <h2>MMA-Bench: Controlled Modality Conflicts</h2>
+        <p>
+          We build <strong>MMA-Bench</strong> starting from AudioSet and carefully prune,
+          verify, and recombine clips to expose how models behave when modalities cooperate,
+          vanish, or contradict each other.
+        </p>
+      </div>
 
-      <div class="buttons">
-        <button class="btn" aria-disabled="true">
-          Paper <span class="badge">Soon</span>
-        </button>
-        <button class="btn" aria-disabled="true">
-          Code <span class="badge">Soon</span>
-        </button>
-        <button class="btn" aria-disabled="true">
-          Data <span class="badge">Soon</span>
-        </button>
-        <button class="btn" aria-disabled="true">
-          MMA-Bench <span class="badge">Soon</span>
-        </button>
+      <div class="section-grid">
+        <article class="card">
+          <h3>Data Curation</h3>
+          <p>
+            We simplify the AudioSet ontology, remove action-less and restricted classes, and keep
+            only clips where a single sounding object is clearly visible and audible. Automated checks
+            plus manual verification yield a high-quality aligned set.
+          </p>
+          <ul class="mini-list">
+            <li>Start from AudioSet evaluation split.</li>
+            <li>Two-stage ontology pruning &amp; video filtering.</li>
+            <li>Final core of 658 clips across 49 sound categories.</li>
+          </ul>
+          <button class="expand-btn" data-target="dataset-explorer">
+            Open Dataset Explorer
+          </button>
+        </article>
+
+        <article class="card">
+          <h3>Misalignment Generator</h3>
+          <p>
+            For each aligned clip, we swap its audio with a different event to create a matched
+            misaligned counterpart. The benchmark ends up balanced: half aligned, half misaligned.
+          </p>
+          <ul class="mini-list">
+            <li>1,316 videos (aligned + misaligned).</li>
+            <li>Paired visual- and audio-focused QA tasks per clip.</li>
+            <li>Stress-tests modality-specific reasoning.</li>
+          </ul>
+        </article>
+
+        <article class="card interactive-card">
+          <h3>Scenario Explorer</h3>
+          <p>Select a scenario to see how we perturb modalities.</p>
+          <div class="scenario-buttons">
+            <button class="scenario-btn active" data-scenario="baseline">Aligned</button>
+            <button class="scenario-btn" data-scenario="semantic-av">Video≠Audio</button>
+            <button class="scenario-btn" data-scenario="misleading-text">Misleading Text</button>
+            <button class="scenario-btn" data-scenario="long-context">Long Context</button>
+            <button class="scenario-btn" data-scenario="zero-frames">Frames Zeroed</button>
+            <button class="scenario-btn" data-scenario="silent-audio">Audio Removed</button>
+          </div>
+          <div id="scenario-description" class="scenario-description">
+            <h4>Aligned audio–video–text</h4>
+            <p>
+              A church bell video with matching bell sounds and neutral text. Both visual and audio
+              questions have consistent answers; models should behave like ideal multimodal reasoners.
+            </p>
+          </div>
+        </article>
       </div>
     </section>
 
-    <section class="hero-image">
-      <img
-        src="assets/imgs/hero.png"
-        alt="MMA-Bench visualization illustrating multimodal attention patterns"
-      />
+    <!-- DATASET PIPELINE: curation + pipeline figs -->
+    <section id="dataset-pipeline" class="section section-alt">
+      <div class="section-header">
+        <h2>Dataset Curation &amp; Pipeline</h2>
+        <p>
+          The paper devotes a full section to dataset design. This area mirrors those figures:
+          ontology simplification, clip filtering, and misalignment construction. Replace the
+          placeholders with the actual pipeline diagrams from the paper / supplementary.
+        </p>
+      </div>
+
+      <div class="results-grid">
+        <article class="result-card result-card-wide">
+          <h3>End-to-End MMA-Bench Pipeline</h3>
+          <p class="result-text">
+            From raw AudioSet clips to aligned + misaligned AVQA pairs: ontology pruning, class
+            selection, clip filtering, QA generation, and misalignment construction.
+          </p>
+          <div class="results-figure">
+            <img src="assets/img/dataset_pipeline_overview.png" alt="Full dataset pipeline overview" />
+          </div>
+          <button class="expand-btn" data-target="pipeline-overview">
+            Expand Pipeline View
+          </button>
+        </article>
+
+        <article class="result-card">
+          <h3>Ontology Simplification</h3>
+          <p class="result-text">
+            We compress hundreds of AudioSet labels into a compact set of visually grounded
+            categories by merging overly fine-grained leaves and removing abstract or ambiguous nodes.
+          </p>
+          <div class="results-figure">
+            <img src="assets/img/dataset_pipeline_ontology.png" alt="Ontology simplification figure" />
+          </div>
+          <button class="expand-btn" data-target="pipeline-ontology">
+            Explore Ontology
+          </button>
+        </article>
+
+        <article class="result-card">
+          <h3>Aligned &amp; Misaligned Clips</h3>
+          <p class="result-text">
+            Starting from the cleaned classes, we run automated AV consistency checks, followed by
+            strict human verification to retain aligned videos and generate their misaligned
+            counterparts.
+          </p>
+          <div class="results-figure">
+            <img src="assets/img/dataset_pipeline_misalignment.png" alt="Aligned vs misaligned construction figure" />
+          </div>
+          <button class="expand-btn" data-target="pipeline-misalignment">
+            Open Misalignment Explorer
+          </button>
+        </article>
+      </div>
+    </section>
+
+    <!-- RESULTS OVERVIEW -->
+    <section id="results" class="section">
+      <div class="section-header">
+        <h2>Results on MMA-Bench and Related Benchmarks</h2>
+        <p>
+          We evaluate a range of open- and closed-source MLLMs under controlled modality
+          perturbations and report detailed trends across tasks, models, and perturbation types.
+          Plug in the main plots from the paper into the slots below.
+        </p>
+      </div>
+
+      <div class="results-grid">
+        <article class="result-card result-card-wide">
+          <h3>Overall Performance on MMA-Bench</h3>
+          <p class="result-text">
+            Accuracy on audio- and visual-focused questions under aligned and misaligned settings.
+            This figure summarizes how often models select the correct modality-specific answer.
+          </p>
+          <div class="results-figure">
+            <img src="assets/img/results_overall_mma.png" alt="Overall MMA-Bench results plot" />
+          </div>
+        </article>
+
+        <article class="result-card">
+          <h3>Textual Bias &amp; Misleading Captions</h3>
+          <p class="result-text">
+            Performance drop when we prepend misleading captions or long irrelevant text, showing
+            how strongly models over-trust language compared to audio–visual evidence.
+          </p>
+          <div class="results-figure">
+            <img src="assets/img/results_text_bias.png" alt="Bar plot for textual bias experiments" />
+          </div>
+        </article>
+
+        <article class="result-card">
+          <h3>Modality Ablations</h3>
+          <p class="result-text">
+            Accuracy when we remove or corrupt one modality at a time (video blacked out, audio
+            muted, or text removed), revealing brittle integration and lack of abstention.
+          </p>
+          <div class="results-figure">
+            <img src="assets/img/results_ablation_modalities.png" alt="Bar plot for modality ablation experiments" />
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- BLACK-BOX MODEL COMPARISON -->
+    <section class="section">
+      <div class="section-header">
+        <h2>Black-Box Robustness Across Models</h2>
+        <p>
+          Different MLLMs exhibit distinct failure patterns. Use the selector to inspect how each
+          model behaves across MMA-Bench and related benchmarks once you plug in the corresponding
+          result plots.
+        </p>
+      </div>
+
+      <div class="results-model-grid">
+        <article class="card interactive-card">
+          <h3>Model Comparison Explorer</h3>
+          <p>
+            Click a model to update the description and figure. You can replace the placeholder
+            images with the exact bar charts / plots from the paper.
+          </p>
+          <div class="results-model-buttons">
+            <button class="results-model-btn active" data-model="qwen-tuned">Qwen2.5-Omni (ours tuned)</button>
+            <button class="results-model-btn" data-model="qwen-base">Qwen2.5-Omni (base)</button>
+            <button class="results-model-btn" data-model="videollama">VideoLLaMA2</button>
+            <button class="results-model-btn" data-model="closed">Closed-source MLLM</button>
+          </div>
+          <div id="results-model-description" class="scenario-description">
+            <h4>Qwen2.5-Omni (alignment-aware tuned)</h4>
+            <p>
+              Our tuned model maintains high accuracy under aligned conditions and shows the
+              smallest degradation under semantic AV conflicts and misleading text, indicating
+              better modality selectivity and grounding.
+            </p>
+          </div>
+        </article>
+
+        <article class="card">
+          <h3>Robustness Plots</h3>
+          <p class="result-text">
+            The figure below is swapped dynamically by the model selector. Place per-model plots
+            here (e.g., grouped bar charts for aligned, misaligned, misleading, and ablation
+            settings).
+          </p>
+          <div class="results-figure">
+            <img
+              id="results-model-figure"
+              src="assets/img/results_model_qwen_tuned.png"
+              alt="Model robustness plot"
+            />
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- WHITE-BOX: QWEN + VIDEOLLAMA -->
+    <section id="whitebox" class="section section-alt">
+      <div class="section-header">
+        <h2>White-Box Attention Diagnostics</h2>
+        <p>
+          We inspect layer- and head-wise attention to quantify modality dominance and how
+          alignment-aware tuning redistributes attention toward the queried modality. This section
+          mirrors the white-box figures in the main paper and supplementary.
+        </p>
+      </div>
+
+      <!-- Model selector for white-box (Qwen vs VideoLLaMA) -->
+      <article class="card interactive-card whitebox-card">
+        <h3>Choose Model for White-Box View</h3>
+        <p>
+          Toggle between Qwen2.5-Omni and VideoLLaMA2 to see their respective attention statistics,
+          using the same visual style as in the paper and supplement.
+        </p>
+        <div class="whitebox-model-buttons">
+          <button class="whitebox-model-btn active" data-wmodel="qwen">Qwen2.5-Omni</button>
+          <button class="whitebox-model-btn" data-wmodel="videollama">VideoLLaMA2</button>
+        </div>
+        <div id="whitebox-model-description" class="scenario-description">
+          <h4>Qwen2.5-Omni: Modality Selectivity</h4>
+          <p>
+            Qwen2.5-Omni shows strong textual dominance but exhibits noticeable shifts between
+            audio and video tokens under modality-specific prompts, especially after alignment-aware
+            tuning.
+          </p>
+        </div>
+      </article>
+
+      <div class="results-grid whitebox-grid">
+        <!-- Cohen's D / curves -->
+        <article class="result-card">
+          <h3>Cohen's D &amp; Layer-wise Modality Shifts</h3>
+          <p class="result-text">
+            Effect sizes between attention distributions under visual vs. audio prompts, per layer,
+            before and after alignment-aware tuning. Swap in the exact plots for each model.
+          </p>
+          <div class="results-figure">
+            <img
+              id="whitebox-cohen-figure"
+              src="assets/img/whitebox_qwen_cohen.png"
+              alt="Layer-wise Cohen's D curves for Qwen"
+            />
+          </div>
+        </article>
+
+        <!-- Heatmaps -->
+        <article class="result-card">
+          <h3>Attention Heatmaps</h3>
+          <p class="result-text">
+            Representative head-layer heatmaps for visual and audio tokens. These illustrate where
+            the model actually attends when different modalities are emphasized or misaligned.
+          </p>
+          <div class="results-figure">
+            <img
+              id="whitebox-heatmap-figure"
+              src="assets/img/whitebox_qwen_heatmap.png"
+              alt="Attention heatmaps for Qwen"
+            />
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- INTERPRETIVE FINDINGS -->
+    <section id="findings" class="section">
+      <div class="section-header">
+        <h2>What Do We Learn from MMA-Bench?</h2>
+        <p>
+          We combine black-box evaluation with white-box attention analysis to understand how models
+          actually integrate modalities, not just how they score on classic benchmarks.
+        </p>
+      </div>
+
+      <div class="accordion" data-accordion>
+        <button class="accordion-item" data-accordion-item>
+          <span>Finding 1 — Brittle Modality Integration</span>
+          <span class="accordion-icon">+</span>
+        </button>
+        <div class="accordion-panel">
+          <p>
+            When we remove or ablate a modality (e.g., silence the audio or zero out frames),
+            MLLMs rarely degrade gracefully. Some models lean heavily on vision, others on text, and
+            almost none abstain when the requested evidence is missing.
+          </p>
+        </div>
+
+        <button class="accordion-item" data-accordion-item>
+          <span>Finding 2 — Text and Vision Dominate</span>
+          <span class="accordion-icon">+</span>
+        </button>
+        <div class="accordion-panel">
+          <p>
+            Text tokens absorb most of the attention mass, with visual tokens next and audio last.
+            Misleading captions or long irrelevant context can completely override clear audio–visual
+            cues, mirroring the strong textual attention dominance we observe inside the model.
+          </p>
+        </div>
+
+        <button class="accordion-item" data-accordion-item>
+          <span>Finding 3 — Modality Selectivity Under Conflict</span>
+          <span class="accordion-icon">+</span>
+        </button>
+        <div class="accordion-panel">
+          <p>
+            Using effect sizes between attention distributions under visual vs. audio prompts, we
+            find that models slightly reallocate attention toward the prompted modality, especially in
+            deeper layers — but the shifts are too weak for robust reasoning under conflict until we
+            apply alignment-aware tuning.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ALIGNMENT-AWARE TUNING -->
+    <section id="alignment" class="section section-alt">
+      <div class="section-header">
+        <h2>Alignment-Aware Tuning</h2>
+        <p>
+          We fine-tune Qwen2.5-Omni with supervision that explicitly tells the model which modality
+          each question should use, while still providing all modalities as input.
+        </p>
+      </div>
+
+      <div class="section-grid">
+        <article class="card">
+          <h3>Training Signal</h3>
+          <p>
+            Visual- and audio-focused QA over aligned and misaligned clips: the model must answer
+            correctly using the prompted modality, not shortcuts like “always trust text” or “always
+            trust vision”.
+          </p>
+        </article>
+
+        <article class="card">
+          <h3>Quantitative Gains</h3>
+          <p>
+            On semantic misalignment, alignment-aware tuning boosts accuracy on both visual and audio
+            prompts, and improves robustness to misleading captions and hallucination-oriented
+            benchmarks.
+          </p>
+        </article>
+
+        <article class="card interactive-card">
+          <h3>Attention Reallocation Explorer</h3>
+          <p>
+            Toggle to see how the interpretation changes conceptually before vs. after tuning.
+          </p>
+          <div class="toggle-group">
+            <button class="toggle-btn active" data-attn="before">Before Tuning</button>
+            <button class="toggle-btn" data-attn="after">After Tuning</button>
+          </div>
+          <div id="attn-description" class="scenario-description">
+            <h4>Before Tuning</h4>
+            <p>
+              Attention is dominated by text tokens with mild reweighting between audio and visual
+              streams when prompts change. Models often follow whichever modality is statistically
+              easiest instead of the one requested by the prompt.
+            </p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- DEMO GALLERY -->
+    <section id="demos" class="section section-alt">
+      <div class="section-header">
+        <h2>Qualitative Demo Gallery</h2>
+        <p>
+          Short clips showcasing typical MMA-Bench scenarios and model behaviour. Duplicate the demo
+          cards to add more qualitative examples as new results become available.
+        </p>
+      </div>
+
+      <div class="demo-grid">
+        <!-- Demo 1 -->
+        <article class="demo-card">
+          <h3>Semantic AV Misalignment</h3>
+          <p class="demo-desc">
+            Video and audio describe different events; we compare baseline vs alignment-aware tuning.
+          </p>
+          <div class="demo-video-wrapper">
+            <video controls preload="metadata" poster="assets/img/hero.png">
+              <source src="assets/video/demo_semantic_av.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        </article>
+
+        <!-- Demo 2 -->
+        <article class="demo-card">
+          <h3>Misleading Caption vs Grounded Audio</h3>
+          <p class="demo-desc">
+            A wrong textual caption competes with correct audio–visual cues.
+          </p>
+          <div class="demo-video-wrapper">
+            <video controls preload="metadata" poster="assets/img/hero.png">
+              <source src="assets/video/demo_misleading_text.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        </article>
+
+        <!-- Demo 3 -->
+        <article class="demo-card">
+          <h3>Long-Context Robustness</h3>
+          <p class="demo-desc">
+            Model behaviour under long irrelevant text context; clip can be added later.
+          </p>
+          <div class="demo-video-placeholder">
+            <span>Demo coming soon</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- RESOURCES -->
+    <section id="resources" class="section">
+      <div class="section-header">
+        <h2>Resources &amp; BibTeX</h2>
+        <p>
+          Links will be updated as the project is released. For now, you can cite the MMA-Bench
+          paper as:
+        </p>
+      </div>
+
+      <div class="resources-grid">
+        <div class="card">
+          <h3>BibTeX (placeholder)</h3>
+<pre class="bibtex">
+@inproceedings{mma_bench_2026,
+  title     = {Some Modalities are More Equal Than Others:
+               Decoding and Architecting Multimodal Integration in MLLMs},
+  author    = {To be updated},
+  booktitle = {Proceedings of the IEEE/CVF Conference on
+               Computer Vision and Pattern Recognition (CVPR)},
+  year      = {2026}
+}
+</pre>
+        </div>
+        <div class="card">
+          <h3>Contact</h3>
+          <p>
+            Project lead &amp; contact information will be added after the review process. For now,
+            please refer to the paper’s corresponding author once de-anonymized.
+          </p>
+        </div>
+      </div>
     </section>
   </main>
 
   <footer class="site-footer">
-    <span>MMA-Bench · Multimodal Alignment Benchmark · Project page (WIP)</span>
+    <p>MMA-Bench · Multimodal Alignment Benchmark · Project page (Work in Progress)</p>
   </footer>
+
+  <!-- Expandable Explorers (dataset + pipeline) -->
+  <div class="expand-overlay" id="expand-overlay">
+    <div class="expand-backdrop" data-close-overlay></div>
+
+    <!-- Dataset Explorer -->
+    <div class="expand-panel" data-panel="dataset-explorer">
+      <button class="expand-close" data-close-overlay>&times;</button>
+      <h2>Dataset Explorer</h2>
+      <p class="expand-subtext">
+        A quick tour of MMA-Bench construction: ontology simplification, sample filtering,
+        and preprocessing statistics (resolutions, durations, splits).
+      </p>
+
+      <div class="expand-grid">
+        <section class="expand-block">
+          <h3>Ontology Roots &amp; Pruned Classes</h3>
+          <p>
+            Starting from the full AudioSet ontology, we apply leaf absorption, removal of
+            action-less sounds, and elimination of ambiguous or restricted nodes to obtain a
+            smaller, visually grounded class set.
+          </p>
+          <div class="expand-figure">
+            <img src="assets/img/dataset_explorer_ontology_tree.png"
+                 alt="Ontology subtree with pruned and kept nodes highlighted" />
+          </div>
+        </section>
+
+        <section class="expand-block">
+          <h3>Resolution &amp; Duration Statistics</h3>
+          <p>
+            Histograms for frame resolutions and clip lengths. Most clips are 10 seconds long,
+            with resolutions close to common 4:3 and 16:9 formats, motivating the standardized
+            504×504×10 s preprocessing choice.
+          </p>
+          <div class="expand-figure">
+            <img src="assets/img/dataset_explorer_stats.png"
+                 alt="Histograms of video resolutions and durations" />
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- Pipeline Overview Explorer -->
+    <div class="expand-panel" data-panel="pipeline-overview">
+      <button class="expand-close" data-close-overlay>&times;</button>
+      <h2>MMA-Bench Pipeline Overview</h2>
+      <p class="expand-subtext">
+        End-to-end path from raw AudioSet clips to aligned and misaligned AVQA pairs.
+      </p>
+      <div class="expand-figure large">
+        <img src="assets/img/dataset_pipeline_overview_large.png"
+             alt="Large version of the full MMA-Bench pipeline diagram" />
+      </div>
+    </div>
+
+    <!-- Ontology Explorer -->
+    <div class="expand-panel" data-panel="pipeline-ontology">
+      <button class="expand-close" data-close-overlay>&times;</button>
+      <h2>Ontology Simplification Explorer</h2>
+      <p class="expand-subtext">
+        Drill into roots, absorbed leaves, and removed nodes. You can later replace this with
+        an interactive tree or collapsible SVG when you have time.
+      </p>
+      <div class="expand-grid">
+        <section class="expand-block">
+          <h3>Original vs Simplified</h3>
+          <div class="expand-figure">
+            <img src="assets/img/dataset_pipeline_ontology_compare.png"
+                 alt="Comparison between original and simplified ontology" />
+          </div>
+        </section>
+        <section class="expand-block">
+          <h3>Kept vs Removed Nodes</h3>
+          <p>
+            Highlighted nodes correspond to restricted, abstract, or multi-parent classes that
+            are removed or merged in the cleaned ontology used for MMA-Bench.
+          </p>
+        </section>
+      </div>
+    </div>
+
+    <!-- Misalignment Explorer -->
+    <div class="expand-panel" data-panel="pipeline-misalignment">
+      <button class="expand-close" data-close-overlay>&times;</button>
+      <h2>Aligned &amp; Misaligned Clips Explorer</h2>
+      <p class="expand-subtext">
+        Visual walk-through of how aligned clips are validated and how we generate paired
+        semantic misalignment examples.
+      </p>
+      <div class="expand-grid">
+        <section class="expand-block">
+          <h3>Automated AV Consistency Checks</h3>
+          <p>
+            A multimodal judge model verifies audio–video consistency under visual-only, audio-only,
+            and cross-modal queries. A clip must pass all checks to be retained.
+          </p>
+        </section>
+        <section class="expand-block">
+          <h3>Human Verification + Split Stats</h3>
+          <p>
+            Annotators enforce consensus on object visibility, audio purity, and action dynamics,
+            resulting in a clean aligned set and balanced aligned / misaligned pairs.
+          </p>
+          <div class="expand-figure">
+            <img src="assets/img/dataset_pipeline_split_stats.png"
+                 alt="Table of split-wise sample counts before and after filtering" />
+          </div>
+        </section>
+        <section class="expand-block">
+          <h3>Semantic Misalignment Construction</h3>
+          <p>
+            For each aligned clip, we swap in a different audio class to create a misaligned
+            counterpart, forming the core of the semantic AV conflict setting in MMA-Bench.
+          </p>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/js/main.js"></script>
 </body>
 </html>
