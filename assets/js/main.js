@@ -1,45 +1,69 @@
-// Scenario Explorer content
+// Scenario Explorer: include description + video + QA
 const SCENARIOS = {
   baseline: {
     title: "Aligned audio–video–text",
     text:
       "A church bell video with matching bell sounds and neutral text. " +
       "Both visual and audio questions have consistent answers; " +
-      "models should behave like ideal multimodal reasoners."
+      "models should behave like ideal multimodal reasoners.",
+    video: "assets/video/scenario_aligned.mp4",
+    question: "What object is repeatedly making sound in this clip?",
+    audioAnswer: "A ringing church bell.",
+    videoAnswer: "A church bell swinging in the tower."
   },
   "semantic-av": {
     title: "Video≠Audio (semantic misalignment)",
     text:
       "The video shows a church bell, but the audio is a dog bark. " +
       "Correct answers differ between visual and audio questions, " +
-      "revealing whether models can selectively trust the right stream."
+      "revealing whether models can selectively trust the right stream.",
+    video: "assets/video/scenario_semantic_av.mp4",
+    question: "What object is making the sound in this clip?",
+    audioAnswer: "A barking dog.",
+    videoAnswer: "A ringing church bell."
   },
   "misleading-text": {
     title: "Misleading caption",
     text:
       "We keep audio and video aligned but prepend a wrong caption, e.g., " +
       '"Video caption: Vehicle." for a non-vehicle scene. ' +
-      "This tests whether language overrides clear audio–visual evidence."
+      "This tests whether language overrides clear audio–visual evidence.",
+    video: "assets/video/scenario_misleading_text.mp4",
+    question: "What is the main object producing sound?",
+    audioAnswer: "Chiming church bell.",
+    videoAnswer: "Swinging church bell in the tower."
   },
   "long-context": {
     title: "Long irrelevant context",
     text:
       "We append long random text after the query while leaving the audio–video intact. " +
-      "This probes long-context robustness: can the model retain correct grounding?"
+      "This probes long-context robustness: can the model retain correct grounding?",
+    video: "assets/video/scenario_long_context.mp4",
+    question: "Which object is responsible for the repeating sound?",
+    audioAnswer: "The bell.",
+    videoAnswer: "The bell in the tower."
   },
   "zero-frames": {
     title: "Frames zeroed (eyes closed)",
     text:
       "All visual frames are replaced by black images but the original audio is preserved. " +
       "Under audio prompts, models should rely only on sound; " +
-      "visual prompts become ill-posed and expose shortcut behavior."
+      "visual prompts become ill-posed and expose shortcut behavior.",
+    video: "assets/video/scenario_zero_frames.mp4",
+    question: "What sound do you hear in this clip?",
+    audioAnswer: "Church bells ringing.",
+    videoAnswer: "Visual information is absent; no object is visible."
   },
   "silent-audio": {
     title: "Audio removed (ears shut)",
     text:
       "We strip the audio track but keep the visual frames. " +
       "Under visual prompts, performance should stay stable; " +
-      "under audio prompts, models should ideally abstain instead of hallucinating."
+      "under audio prompts, models should ideally abstain instead of hallucinating.",
+    video: "assets/video/scenario_silent_audio.mp4",
+    question: "Which visible object should be making sound here?",
+    audioAnswer: "Audio is silent; model should abstain.",
+    videoAnswer: "Church bell visible at the top of the tower."
   }
 };
 
@@ -99,11 +123,24 @@ const WHITEBOX_MODELS = {
 };
 
 document.addEventListener("DOMContentLoaded", () => {
-  /* Scenario buttons */
+  /* Scenario buttons + video/Q&A update */
   const scenarioButtons = document.querySelectorAll(".scenario-btn");
   const scenarioDescription = document.getElementById("scenario-description");
+  const scenarioVideo = document.getElementById("scenario-video");
+  const scenarioVideoSource = document.getElementById("scenario-video-source");
+  const scenarioQuestion = document.getElementById("scenario-question");
+  const scenarioAudioAnswer = document.getElementById("scenario-audio-answer");
+  const scenarioVideoAnswer = document.getElementById("scenario-video-answer");
 
-  if (scenarioButtons.length && scenarioDescription) {
+  if (
+    scenarioButtons.length &&
+    scenarioDescription &&
+    scenarioVideo &&
+    scenarioVideoSource &&
+    scenarioQuestion &&
+    scenarioAudioAnswer &&
+    scenarioVideoAnswer
+  ) {
     scenarioButtons.forEach((btn) => {
       btn.addEventListener("click", () => {
         scenarioButtons.forEach((b) => b.classList.remove("active"));
@@ -111,13 +148,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const key = btn.dataset.scenario;
         const info = SCENARIOS[key];
+        if (!info) return;
 
-        if (info) {
-          scenarioDescription.innerHTML = `
-            <h4>${info.title}</h4>
-            <p>${info.text}</p>
-          `;
-        }
+        scenarioDescription.innerHTML = `
+          <h4>${info.title}</h4>
+          <p>${info.text}</p>
+        `;
+
+        scenarioQuestion.textContent = info.question;
+        scenarioAudioAnswer.textContent = info.audioAnswer;
+        scenarioVideoAnswer.textContent = info.videoAnswer;
+
+        scenarioVideoSource.src = info.video;
+        scenarioVideo.load();
       });
     });
   }
@@ -236,54 +279,6 @@ document.addEventListener("DOMContentLoaded", () => {
         whiteboxHeatmapFigure.src = info.heatmapImg;
         whiteboxHeatmapFigure.alt = `${info.title} attention heatmaps`;
       });
-    });
-  }
-
-  /* Expandable dataset / pipeline explorers */
-  const overlay = document.getElementById("expand-overlay");
-  const expandButtons = document.querySelectorAll(".expand-btn");
-
-  if (overlay && expandButtons.length) {
-    const panels = overlay.querySelectorAll(".expand-panel");
-
-    const closeOverlay = () => {
-      overlay.classList.remove("open");
-      document.body.classList.remove("no-scroll");
-      panels.forEach((p) => p.classList.remove("active"));
-    };
-
-    // Open
-    expandButtons.forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const target = btn.dataset.target;
-        if (!target) return;
-
-        panels.forEach((p) => p.classList.remove("active"));
-        const panel = overlay.querySelector(
-          `.expand-panel[data-panel="${target}"]`
-        );
-        if (!panel) return;
-
-        overlay.classList.add("open");
-        document.body.classList.add("no-scroll");
-        panel.classList.add("active");
-      });
-    });
-
-    // Close via X button or backdrop
-    overlay.addEventListener("click", (ev) => {
-      const target = ev.target;
-      if (!(target instanceof HTMLElement)) return;
-      if (target.hasAttribute("data-close-overlay")) {
-        closeOverlay();
-      }
-    });
-
-    // Close on Esc key
-    document.addEventListener("keydown", (ev) => {
-      if (ev.key === "Escape" && overlay.classList.contains("open")) {
-        closeOverlay();
-      }
     });
   }
 });

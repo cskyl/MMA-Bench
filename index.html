@@ -104,51 +104,25 @@
 
   <!-- MAIN CONTENT -->
   <main class="page-main">
-    <!-- MMA-BENCH -->
+    <!-- MMA-BENCH SCENARIO EXPLORER -->
     <section id="mma-bench" class="section">
       <div class="section-header">
         <h2>MMA-Bench: Controlled Modality Conflicts</h2>
         <p>
-          We build <strong>MMA-Bench</strong> starting from AudioSet and carefully prune,
-          verify, and recombine clips to expose how models behave when modalities cooperate,
-          vanish, or contradict each other.
+          MMA-Bench instantiates a small set of canonical audio–video–text conflict patterns.
+          The explorer below mirrors the hero examples in the paper: each scenario shows a clip,
+          a question, and the correct audio- and video-grounded answers.
         </p>
       </div>
 
       <div class="section-grid">
-        <article class="card">
-          <h3>Data Curation</h3>
-          <p>
-            We simplify the AudioSet ontology, remove action-less and restricted classes, and keep
-            only clips where a single sounding object is clearly visible and audible. Automated checks
-            plus manual verification yield a high-quality aligned set.
-          </p>
-          <ul class="mini-list">
-            <li>Start from AudioSet evaluation split.</li>
-            <li>Two-stage ontology pruning &amp; video filtering.</li>
-            <li>Final core of 658 clips across 49 sound categories.</li>
-          </ul>
-          <button class="expand-btn" data-target="dataset-explorer">
-            Open Dataset Explorer
-          </button>
-        </article>
-
-        <article class="card">
-          <h3>Misalignment Generator</h3>
-          <p>
-            For each aligned clip, we swap its audio with a different event to create a matched
-            misaligned counterpart. The benchmark ends up balanced: half aligned, half misaligned.
-          </p>
-          <ul class="mini-list">
-            <li>1,316 videos (aligned + misaligned).</li>
-            <li>Paired visual- and audio-focused QA tasks per clip.</li>
-            <li>Stress-tests modality-specific reasoning.</li>
-          </ul>
-        </article>
-
-        <article class="card interactive-card">
+        <article class="card interactive-card card-full">
           <h3>Scenario Explorer</h3>
-          <p>Select a scenario to see how we perturb modalities.</p>
+          <p>
+            Click a scenario to see an example video, the question we ask, and the answers that
+            are correct if the model grounds itself in audio or video.
+          </p>
+
           <div class="scenario-buttons">
             <button class="scenario-btn active" data-scenario="baseline">Aligned</button>
             <button class="scenario-btn" data-scenario="semantic-av">Video≠Audio</button>
@@ -157,70 +131,87 @@
             <button class="scenario-btn" data-scenario="zero-frames">Frames Zeroed</button>
             <button class="scenario-btn" data-scenario="silent-audio">Audio Removed</button>
           </div>
-          <div id="scenario-description" class="scenario-description">
-            <h4>Aligned audio–video–text</h4>
-            <p>
-              A church bell video with matching bell sounds and neutral text. Both visual and audio
-              questions have consistent answers; models should behave like ideal multimodal reasoners.
-            </p>
-          </div>
+
+  <div class="scenario-layout">
+    <!-- Left: video -->
+    <div class="scenario-player">
+      <div class="scenario-video-frame">
+        <video id="scenario-video" controls preload="metadata" poster="assets/img/hero.png">
+          <source id="scenario-video-source" src="assets/video/scenario_aligned.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      </div>
+    </div>
+    
+    <div class="scenario-qa">
+      <div id="scenario-description" class="qa-item qa-desc">
+        <h4>Scenario</h4>
+        <p>
+          A church bell video with matching bell sounds and neutral text. Both visual and audio
+          questions have consistent answers; models should behave like ideal multimodal reasoners.
+        </p>
+      </div>
+      <div class="qa-item qa-question">
+        <h4>Question</h4>
+        <p id="scenario-question">
+          What object is repeatedly making sound in this clip?
+        </p>
+      </div>
+      <div class="qa-item qa-audio">
+        <h4>Audio Answer</h4>
+        <p id="scenario-audio-answer">
+          A ringing church bell.
+        </p>
+      </div>
+      <div class="qa-item qa-video">
+        <h4>Video Answer</h4>
+        <p id="scenario-video-answer">
+          A church bell swinging in the tower.
+        </p>
+      </div>
+    </div>
+  </div>
         </article>
       </div>
     </section>
 
-    <!-- DATASET PIPELINE: curation + pipeline figs -->
+    <!-- DATASET PIPELINE: two-step curation -->
     <section id="dataset-pipeline" class="section section-alt">
       <div class="section-header">
-        <h2>Dataset Curation &amp; Pipeline</h2>
+        <h2>Dataset Curation Pipeline</h2>
         <p>
-          The paper devotes a full section to dataset design. This area mirrors those figures:
-          ontology simplification, clip filtering, and misalignment construction. Replace the
-          placeholders with the actual pipeline diagrams from the paper / supplementary.
+          MMA-Bench is built in two stages. First, we apply ontology-driven filtering to clean
+          the AudioSet label space. Second, we run an LLM-based audio–video consistency filter
+          to keep clips with clear, single-source events before constructing misaligned pairs.
         </p>
       </div>
 
-      <div class="results-grid">
-        <article class="result-card result-card-wide">
-          <h3>End-to-End MMA-Bench Pipeline</h3>
+      <div class="results-grid results-grid-two">
+        <article class="result-card">
+          <h3>Step 1 — Ontology-Based Filtering</h3>
           <p class="result-text">
-            From raw AudioSet clips to aligned + misaligned AVQA pairs: ontology pruning, class
-            selection, clip filtering, QA generation, and misalignment construction.
+            We simplify the AudioSet ontology by absorbing overly fine-grained leaves, removing
+            ambiguous, abstract, and restricted nodes, and keeping only visually-grounded,
+            action-bearing classes. This produces a compact ontology well-suited for AVQA.
           </p>
           <div class="results-figure">
-            <img src="assets/img/dataset_pipeline_overview.png" alt="Full dataset pipeline overview" />
+            <img src="assets/img/dataset_pipeline_ontology_step1.png"
+                 alt="Two-step ontology-based filtering pipeline" />
           </div>
-          <button class="expand-btn" data-target="pipeline-overview">
-            Expand Pipeline View
-          </button>
         </article>
 
         <article class="result-card">
-          <h3>Ontology Simplification</h3>
+          <h3>Step 2 — LLM-Based AV Consistency Filter</h3>
           <p class="result-text">
-            We compress hundreds of AudioSet labels into a compact set of visually grounded
-            categories by merging overly fine-grained leaves and removing abstract or ambiguous nodes.
+            For each candidate clip, a multimodal LLM judge answers four consistency queries
+            (visual-only, audio-only, and cross-modal) to verify that the same object is both
+            visible and sounding. Clips that pass are then human-verified and used to form
+            aligned / misaligned MMA-Bench pairs.
           </p>
           <div class="results-figure">
-            <img src="assets/img/dataset_pipeline_ontology.png" alt="Ontology simplification figure" />
+            <img src="assets/img/dataset_pipeline_llm_step2.png"
+                 alt="LLM-based audio–video consistency filtering pipeline" />
           </div>
-          <button class="expand-btn" data-target="pipeline-ontology">
-            Explore Ontology
-          </button>
-        </article>
-
-        <article class="result-card">
-          <h3>Aligned &amp; Misaligned Clips</h3>
-          <p class="result-text">
-            Starting from the cleaned classes, we run automated AV consistency checks, followed by
-            strict human verification to retain aligned videos and generate their misaligned
-            counterparts.
-          </p>
-          <div class="results-figure">
-            <img src="assets/img/dataset_pipeline_misalignment.png" alt="Aligned vs misaligned construction figure" />
-          </div>
-          <button class="expand-btn" data-target="pipeline-misalignment">
-            Open Misalignment Explorer
-          </button>
         </article>
       </div>
     </section>
@@ -582,126 +573,6 @@
     <p>MMA-Bench · Multimodal Alignment Benchmark · Project page (Work in Progress)</p>
   </footer>
 
-  <!-- Expandable Explorers (dataset + pipeline) -->
-  <div class="expand-overlay" id="expand-overlay">
-    <div class="expand-backdrop" data-close-overlay></div>
-
-    <!-- Dataset Explorer -->
-    <div class="expand-panel" data-panel="dataset-explorer">
-      <button class="expand-close" data-close-overlay>&times;</button>
-      <h2>Dataset Explorer</h2>
-      <p class="expand-subtext">
-        A quick tour of MMA-Bench construction: ontology simplification, sample filtering,
-        and preprocessing statistics (resolutions, durations, splits).
-      </p>
-
-      <div class="expand-grid">
-        <section class="expand-block">
-          <h3>Ontology Roots &amp; Pruned Classes</h3>
-          <p>
-            Starting from the full AudioSet ontology, we apply leaf absorption, removal of
-            action-less sounds, and elimination of ambiguous or restricted nodes to obtain a
-            smaller, visually grounded class set.
-          </p>
-          <div class="expand-figure">
-            <img src="assets/img/dataset_explorer_ontology_tree.png"
-                 alt="Ontology subtree with pruned and kept nodes highlighted" />
-          </div>
-        </section>
-
-        <section class="expand-block">
-          <h3>Resolution &amp; Duration Statistics</h3>
-          <p>
-            Histograms for frame resolutions and clip lengths. Most clips are 10 seconds long,
-            with resolutions close to common 4:3 and 16:9 formats, motivating the standardized
-            504×504×10 s preprocessing choice.
-          </p>
-          <div class="expand-figure">
-            <img src="assets/img/dataset_explorer_stats.png"
-                 alt="Histograms of video resolutions and durations" />
-          </div>
-        </section>
-      </div>
-    </div>
-
-    <!-- Pipeline Overview Explorer -->
-    <div class="expand-panel" data-panel="pipeline-overview">
-      <button class="expand-close" data-close-overlay>&times;</button>
-      <h2>MMA-Bench Pipeline Overview</h2>
-      <p class="expand-subtext">
-        End-to-end path from raw AudioSet clips to aligned and misaligned AVQA pairs.
-      </p>
-      <div class="expand-figure large">
-        <img src="assets/img/dataset_pipeline_overview_large.png"
-             alt="Large version of the full MMA-Bench pipeline diagram" />
-      </div>
-    </div>
-
-    <!-- Ontology Explorer -->
-    <div class="expand-panel" data-panel="pipeline-ontology">
-      <button class="expand-close" data-close-overlay>&times;</button>
-      <h2>Ontology Simplification Explorer</h2>
-      <p class="expand-subtext">
-        Drill into roots, absorbed leaves, and removed nodes. You can later replace this with
-        an interactive tree or collapsible SVG when you have time.
-      </p>
-      <div class="expand-grid">
-        <section class="expand-block">
-          <h3>Original vs Simplified</h3>
-          <div class="expand-figure">
-            <img src="assets/img/dataset_pipeline_ontology_compare.png"
-                 alt="Comparison between original and simplified ontology" />
-          </div>
-        </section>
-        <section class="expand-block">
-          <h3>Kept vs Removed Nodes</h3>
-          <p>
-            Highlighted nodes correspond to restricted, abstract, or multi-parent classes that
-            are removed or merged in the cleaned ontology used for MMA-Bench.
-          </p>
-        </section>
-      </div>
-    </div>
-
-    <!-- Misalignment Explorer -->
-    <div class="expand-panel" data-panel="pipeline-misalignment">
-      <button class="expand-close" data-close-overlay>&times;</button>
-      <h2>Aligned &amp; Misaligned Clips Explorer</h2>
-      <p class="expand-subtext">
-        Visual walk-through of how aligned clips are validated and how we generate paired
-        semantic misalignment examples.
-      </p>
-      <div class="expand-grid">
-        <section class="expand-block">
-          <h3>Automated AV Consistency Checks</h3>
-          <p>
-            A multimodal judge model verifies audio–video consistency under visual-only, audio-only,
-            and cross-modal queries. A clip must pass all checks to be retained.
-          </p>
-        </section>
-        <section class="expand-block">
-          <h3>Human Verification + Split Stats</h3>
-          <p>
-            Annotators enforce consensus on object visibility, audio purity, and action dynamics,
-            resulting in a clean aligned set and balanced aligned / misaligned pairs.
-          </p>
-          <div class="expand-figure">
-            <img src="assets/img/dataset_pipeline_split_stats.png"
-                 alt="Table of split-wise sample counts before and after filtering" />
-          </div>
-        </section>
-        <section class="expand-block">
-          <h3>Semantic Misalignment Construction</h3>
-          <p>
-            For each aligned clip, we swap in a different audio class to create a misaligned
-            counterpart, forming the core of the semantic AV conflict setting in MMA-Bench.
-          </p>
-        </section>
-      </div>
-    </div>
-  </div>
-
   <script src="assets/js/main.js"></script>
 </body>
 </html>
-  
