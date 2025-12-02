@@ -31,6 +31,12 @@ body {
   background: var(--bg-main);
 }
 
+.section p {
+  font-size: 1rem;   /* or 1rem, 0.9rem, etc */
+  line-height: 1.6;
+}
+
+
 /* Top nav */
 
 .top-nav {
@@ -287,7 +293,7 @@ h1 {
 }
 
 .section {
-  max-width: 1120px;
+  max-width: 60%;
   margin: 0 auto;
   padding: 40px 16px;
 }
@@ -299,7 +305,6 @@ h1 {
 }
 
 .section-header {
-  max-width: 720px;
   margin-bottom: 24px;
 }
 
@@ -491,7 +496,7 @@ h1 {
 
 /* Two-column variant (dataset pipeline) */
 .results-grid-two {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: 1fr;
 }
 
 .result-card {
@@ -817,5 +822,95 @@ h1 {
 
   .section {
     padding: 28px 14px;
+  }
+}
+
+.results-table,
+.small-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 6px;      /* gap between rows */
+  font-size: 0.9rem;
+}
+
+/* Header */
+.results-table th,
+.small-table th {
+  background: #e5e9f0;          /* soft cool gray */
+  color: #111827;                /* almost-black text */
+  font-weight: 600;
+  padding: 10px 12px;
+  border-bottom: 1px solid #cbd5e1;
+}
+
+/* Body cells */
+.results-table td,
+.small-table td {
+  background: #ffffff;
+  padding: 10px 12px;
+  text-align: center;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+/* Left-align first column */
+.results-table td:first-child,
+.small-table td:first-child {
+  text-align: left;
+}
+
+/* Group headers */
+.group-header td {
+  background: #e5e9f0;          /* soft cool gray */
+  color: #111827;                /* almost-black text */
+  font-weight: 600;
+  padding: 10px 12px;
+  border-bottom: 1px solid #cbd5e1;
+}
+
+/* Highlight row */
+.highlight-row td {
+  background: rgba(125,249,255,0.18);
+  border: 1px solid rgba(125,249,255,0.45);
+}
+
+/* Delta indicators */
+.delta-up {
+  color: #059669;
+  font-weight: 600;
+  margin-left: 4px;
+}
+
+.delta-down {
+  color: #dc2626;
+  font-weight: 600;
+  margin-left: 4px;
+}
+
+/* Caption */
+.table-caption {
+  margin-top: 6px;
+  font-size: 0.85rem;
+  color: var(--text-soft);
+  line-height: 1.45;
+}
+
+/* TEXT MISALIGNMENT small table variant */
+.small-table {
+  border-spacing: 0 6px;
+  font-size: 0.88rem;
+}
+
+/* Layout container */
+.results-duo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  width: 100%;
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 900px) {
+  .results-duo {
+    grid-template-columns: 1fr;
   }
 }

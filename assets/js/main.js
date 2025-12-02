@@ -1,47 +1,46 @@
 // Scenario Explorer: include description + video + QA
 const SCENARIOS = {
-  baseline: {
-    title: "Aligned audio–video–text",
+  "baseline": {
+    title: "Aligned audio-video",
     text:
-      "A church bell video with matching bell sounds and neutral text. " +
+      "A video of a dog shouting and howling. " +
       "Both visual and audio questions have consistent answers; " +
       "models should behave like ideal multimodal reasoners.",
-    video: "assets/video/scenario_aligned.mp4",
-    question: "What object is repeatedly making sound in this clip?",
-    audioAnswer: "A ringing church bell.",
-    videoAnswer: "A church bell swinging in the tower."
+    video: "assets/video/canidae_aligned.mp4",
+    question: "Which class best describes the visual content of this video? Options: [List of classes]. Answer using a single class name.",
+    audioAnswer: "Canidae",
+    videoAnswer: "Canidae"
   },
   "semantic-av": {
     title: "Video≠Audio (semantic misalignment)",
     text:
-      "The video shows a church bell, but the audio is a dog bark. " +
+      "The video shows a cash register, but the audio is streaming a sound of a printer. " +
       "Correct answers differ between visual and audio questions, " +
       "revealing whether models can selectively trust the right stream.",
-    video: "assets/video/scenario_semantic_av.mp4",
-    question: "What object is making the sound in this clip?",
-    audioAnswer: "A barking dog.",
-    videoAnswer: "A ringing church bell."
+    video: "assets/video/misaligned_printer_aud_cashregis_video.mp4",
+    question: "Which class best describes the visual content of this video? Options: [List of classes]. Answer using a single class name.",
+    audioAnswer: "Printer",
+    videoAnswer: "Cash_register"
   },
   "misleading-text": {
     title: "Misleading caption",
     text:
-      "We keep audio and video aligned but prepend a wrong caption, e.g., " +
-      '"Video caption: Vehicle." for a non-vehicle scene. ' +
-      "This tests whether language overrides clear audio–visual evidence.",
-    video: "assets/video/scenario_misleading_text.mp4",
-    question: "What is the main object producing sound?",
-    audioAnswer: "Chiming church bell.",
-    videoAnswer: "Swinging church bell in the tower."
+      "We keep audio and video aligned but prepend a wrong caption in the text query. " +
+      "This tests whether language overrides clear audio-visual evidence.",
+    video: "assets/video/caption_peturb.mp4",
+    question: "Video_caption: Fowl. Which class best describes the visual content of this video? Options: [List of classes]. Answer the question using a single word or phrase.",
+    audioAnswer: "Accordion",
+    videoAnswer: "Acccordion"
   },
   "long-context": {
     title: "Long irrelevant context",
     text:
-      "We append long random text after the query while leaving the audio–video intact. " +
+      "We append long random text after the query while leaving the audio-video semantically intact. " +
       "This probes long-context robustness: can the model retain correct grounding?",
-    video: "assets/video/scenario_long_context.mp4",
-    question: "Which object is responsible for the repeating sound?",
-    audioAnswer: "The bell.",
-    videoAnswer: "The bell in the tower."
+    video: "assets/video/long_context.mp4",
+    question: "Which class best describes the visual content of this video? Options: [List of classes]. Answer using a single class name. t n g u l m n t z f (5000 random letters)...",
+    audioAnswer: "Explosion",
+    videoAnswer: "Explosion"
   },
   "zero-frames": {
     title: "Frames zeroed (eyes closed)",
@@ -122,8 +121,19 @@ const WHITEBOX_MODELS = {
   }
 };
 
+const DEFAULT_SCENARIO_KEY = 'baseline';
+
 document.addEventListener("DOMContentLoaded", () => {
-  /* Scenario buttons + video/Q&A update */
+  initScenarioExplorer();
+  initAccordion();
+  initAttentionToggle();
+  initResultsSelector();
+  initWhiteboxSelector();
+});
+
+/* ---------- Scenario Explorer ---------- */
+
+function initScenarioExplorer() {
   const scenarioButtons = document.querySelectorAll(".scenario-btn");
   const scenarioDescription = document.getElementById("scenario-description");
   const scenarioVideo = document.getElementById("scenario-video");
@@ -131,41 +141,72 @@ document.addEventListener("DOMContentLoaded", () => {
   const scenarioQuestion = document.getElementById("scenario-question");
   const scenarioAudioAnswer = document.getElementById("scenario-audio-answer");
   const scenarioVideoAnswer = document.getElementById("scenario-video-answer");
+  const layout = document.querySelector(".scenario-layout");
 
   if (
-    scenarioButtons.length &&
-    scenarioDescription &&
-    scenarioVideo &&
-    scenarioVideoSource &&
-    scenarioQuestion &&
-    scenarioAudioAnswer &&
-    scenarioVideoAnswer
+    !scenarioButtons.length ||
+    !scenarioDescription ||
+    !scenarioVideo ||
+    !scenarioVideoSource ||
+    !scenarioQuestion ||
+    !scenarioAudioAnswer ||
+    !scenarioVideoAnswer
   ) {
-    scenarioButtons.forEach((btn) => {
-      btn.addEventListener("click", () => {
-        scenarioButtons.forEach((b) => b.classList.remove("active"));
-        btn.classList.add("active");
-
-        const key = btn.dataset.scenario;
-        const info = SCENARIOS[key];
-        if (!info) return;
-
-        scenarioDescription.innerHTML = `
-          <h4>${info.title}</h4>
-          <p>${info.text}</p>
-        `;
-
-        scenarioQuestion.textContent = info.question;
-        scenarioAudioAnswer.textContent = info.audioAnswer;
-        scenarioVideoAnswer.textContent = info.videoAnswer;
-
-        scenarioVideoSource.src = info.video;
-        scenarioVideo.load();
-      });
-    });
+    return;
   }
 
-  /* Accordion */
+  function setScenario(key) {
+    const info = SCENARIOS[key];
+    if (!info) return;
+
+    // Update active button
+    scenarioButtons.forEach((b) =>
+      b.classList.toggle("active", b.dataset.scenario === key)
+    );
+
+    // Update text block
+    scenarioDescription.innerHTML = `
+      <h4>${info.title}</h4>
+      <p>${info.text}</p>
+    `;
+    scenarioQuestion.textContent = info.question;
+    scenarioAudioAnswer.textContent = info.audioAnswer;
+    scenarioVideoAnswer.textContent = info.videoAnswer;
+
+    // Update video source + poster (thumbnail of first frame)
+    scenarioVideoSource.src = info.video;
+    if (info.poster) {
+      scenarioVideo.poster = info.poster;
+    } else {
+      scenarioVideo.removeAttribute("poster");
+    }
+    scenarioVideo.load();
+
+    // Fade in once initialized
+    if (layout) {
+      layout.classList.add("scenario-visible");
+    }
+  }
+
+  // Attach click handlers
+  scenarioButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const key = btn.dataset.scenario;
+      setScenario(key);
+    });
+  });
+
+  // Initialize once on load using JS data (overwrites dummy HTML)
+  const defaultKey =
+    Array.from(scenarioButtons).find((b) => b.classList.contains("active"))
+      ?.dataset.scenario || scenarioButtons[0].dataset.scenario;
+
+  setScenario(defaultKey);
+}
+
+/* ---------- Accordion ---------- */
+
+function initAccordion() {
   const accordionItems = document.querySelectorAll("[data-accordion-item]");
   accordionItems.forEach((trigger) => {
     trigger.addEventListener("click", () => {
@@ -188,97 +229,135 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   });
+}
 
-  /* Attention toggle (before vs after tuning) */
+/* ---------- Attention toggle (before vs after tuning) ---------- */
+
+function initAttentionToggle() {
   const attnButtons = document.querySelectorAll(".toggle-btn");
   const attnDescription = document.getElementById("attn-description");
 
-  if (attnButtons.length && attnDescription) {
-    attnButtons.forEach((btn) => {
-      btn.addEventListener("click", () => {
-        attnButtons.forEach((b) => b.classList.remove("active"));
-        btn.classList.add("active");
-        const mode = btn.dataset.attn;
+  if (!attnButtons.length || !attnDescription) return;
 
-        if (mode === "after") {
-          attnDescription.innerHTML = `
-            <h4>After Alignment-Aware Tuning</h4>
-            <p>
-              Attention shifts become stronger and more decisive: video tokens gain weight under
-              visual prompts, audio tokens under audio prompts. Effect sizes increase especially
-              in deeper layers, matching the improved robustness we see in MMA-Bench and related
-              benchmarks.
-            </p>
-          `;
-        } else {
-          attnDescription.innerHTML = `
-            <h4>Before Tuning</h4>
-            <p>
-              Attention is dominated by text tokens with only mild reweighting between audio and
-              visual streams when prompts change. Models often follow whichever modality is
-              statistically easiest instead of the one requested by the prompt.
-            </p>
-          `;
-        }
-      });
-    });
+  function setMode(mode) {
+    attnButtons.forEach((b) =>
+      b.classList.toggle("active", b.dataset.attn === mode)
+    );
+
+    if (mode === "after") {
+      attnDescription.innerHTML = `
+        <h4>After Alignment-Aware Tuning</h4>
+        <p>
+          Attention shifts become stronger and more decisive: video tokens gain weight under
+          visual prompts, audio tokens under audio prompts. Effect sizes increase especially
+          in deeper layers, matching the improved robustness we see in MMA-Bench and related
+          benchmarks.
+        </p>
+      `;
+    } else {
+      attnDescription.innerHTML = `
+        <h4>Before Tuning</h4>
+        <p>
+          Attention is dominated by text tokens with only mild reweighting between audio and
+          visual streams when prompts change. Models often follow whichever modality is
+          statistically easiest instead of the one requested by the prompt.
+        </p>
+      `;
+    }
   }
 
-  /* Results model selector (black-box) */
+  attnButtons.forEach((btn) => {
+    btn.addEventListener("click", () => setMode(btn.dataset.attn));
+  });
+
+  // initialize from first button / active button
+  const defaultMode =
+    Array.from(attnButtons).find((b) => b.classList.contains("active"))
+      ?.dataset.attn || attnButtons[0].dataset.attn;
+  setMode(defaultMode);
+}
+
+/* ---------- Results model selector (black-box) ---------- */
+
+function initResultsSelector() {
   const modelButtons = document.querySelectorAll(".results-model-btn");
   const modelDescription = document.getElementById("results-model-description");
   const modelFigure = document.getElementById("results-model-figure");
 
-  if (modelButtons.length && modelDescription && modelFigure) {
-    modelButtons.forEach((btn) => {
-      btn.addEventListener("click", () => {
-        modelButtons.forEach((b) => b.classList.remove("active"));
-        btn.classList.add("active");
+  if (!modelButtons.length || !modelDescription || !modelFigure) return;
 
-        const key = btn.dataset.model;
-        const info = RESULTS_MODELS[key];
-        if (!info) return;
+  function setModel(key) {
+    const info = RESULTS_MODELS[key];
+    if (!info) return;
 
-        modelDescription.innerHTML = `
-          <h4>${info.title}</h4>
-          <p>${info.text}</p>
-        `;
-        modelFigure.src = info.img;
-        modelFigure.alt = `${info.title} robustness plot`;
-      });
-    });
+    modelButtons.forEach((b) =>
+      b.classList.toggle("active", b.dataset.model === key)
+    );
+
+    modelDescription.innerHTML = `
+      <h4>${info.title}</h4>
+      <p>${info.text}</p>
+    `;
+    modelFigure.src = info.img;
+    modelFigure.alt = `${info.title} robustness plot`;
   }
 
-  /* White-box model selector (Qwen vs VideoLLaMA) */
+  modelButtons.forEach((btn) => {
+    btn.addEventListener("click", () => setModel(btn.dataset.model));
+  });
+
+  const defaultKey =
+    Array.from(modelButtons).find((b) => b.classList.contains("active"))
+      ?.dataset.model || modelButtons[0].dataset.model;
+  setModel(defaultKey);
+}
+
+/* ---------- White-box model selector ---------- */
+
+function initWhiteboxSelector() {
   const whiteboxButtons = document.querySelectorAll(".whitebox-model-btn");
-  const whiteboxDescription = document.getElementById("whitebox-model-description");
+  const whiteboxDescription = document.getElementById(
+    "whitebox-model-description"
+  );
   const whiteboxCohenFigure = document.getElementById("whitebox-cohen-figure");
-  const whiteboxHeatmapFigure = document.getElementById("whitebox-heatmap-figure");
+  const whiteboxHeatmapFigure = document.getElementById(
+    "whitebox-heatmap-figure"
+  );
 
   if (
-    whiteboxButtons.length &&
-    whiteboxDescription &&
-    whiteboxCohenFigure &&
-    whiteboxHeatmapFigure
+    !whiteboxButtons.length ||
+    !whiteboxDescription ||
+    !whiteboxCohenFigure ||
+    !whiteboxHeatmapFigure
   ) {
-    whiteboxButtons.forEach((btn) => {
-      btn.addEventListener("click", () => {
-        whiteboxButtons.forEach((b) => b.classList.remove("active"));
-        btn.classList.add("active");
-
-        const key = btn.dataset.wmodel;
-        const info = WHITEBOX_MODELS[key];
-        if (!info) return;
-
-        whiteboxDescription.innerHTML = `
-          <h4>${info.title}</h4>
-          <p>${info.text}</p>
-        `;
-        whiteboxCohenFigure.src = info.cohenImg;
-        whiteboxCohenFigure.alt = `${info.title} Cohen's D curves`;
-        whiteboxHeatmapFigure.src = info.heatmapImg;
-        whiteboxHeatmapFigure.alt = `${info.title} attention heatmaps`;
-      });
-    });
+    return;
   }
-});
+
+  function setWhiteboxModel(key) {
+    const info = WHITEBOX_MODELS[key];
+    if (!info) return;
+
+    whiteboxButtons.forEach((b) =>
+      b.classList.toggle("active", b.dataset.wmodel === key)
+    );
+
+    whiteboxDescription.innerHTML = `
+      <h4>${info.title}</h4>
+      <p>${info.text}</p>
+    `;
+    whiteboxCohenFigure.src = info.cohenImg;
+    whiteboxCohenFigure.alt = `${info.title} Cohen's D curves`;
+    whiteboxHeatmapFigure.src = info.heatmapImg;
+    whiteboxHeatmapFigure.alt = `${info.title} attention heatmaps`;
+  }
+
+  whiteboxButtons.forEach((btn) => {
+    btn.addEventListener("click", () => setWhiteboxModel(btn.dataset.wmodel));
+  });
+
+  const defaultKey =
+    Array.from(whiteboxButtons).find((b) => b.classList.contains("active"))
+      ?.dataset.wmodel || whiteboxButtons[0].dataset.wmodel;
+  setWhiteboxModel(defaultKey);
+}
+
