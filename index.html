@@ -491,48 +491,101 @@
     </section>
 
     <!-- BLACK-BOX MODEL COMPARISON -->
-    <section class="section">
+    <section class="section section-alt">
       <div class="section-header">
         <h2>Black-Box Diagnostics Across Models</h2>
         <p>
-          Different MLLMs exhibit distinct failure patterns. Use the selector to inspect how each
-          model behaves across MMA-Bench and related benchmarks once you plug in the corresponding
-          result plots.
+          Different MLLMs exhibit distinct failure patterns across our MMA-Bench stress tests.
+          Use the model selector to inspect how each model behaves under unimodal ablations,
+          semantic AV conflicts, misleading captions, and long-context perturbations.
         </p>
       </div>
 
       <div class="results-model-grid">
-        <article class="card interactive-card">
+        <!-- Left: selector + hint -->
+        <article class="card interactive-card results-model-left">
           <h3>Model Comparison Explorer</h3>
-          <p>
-            Click a model to update the description and figure. You can replace the placeholder
-            images with the exact bar charts / plots from the paper.
+          <p class="result-text">
+            Select a model to view its robustness profile across the four black-box stress tests.
           </p>
           <div class="results-model-buttons">
-            <button class="results-model-btn active" data-model="qwen-tuned">Qwen2.5-Omni (ours tuned)</button>
-            <button class="results-model-btn" data-model="qwen-base">Qwen2.5-Omni (base)</button>
-            <button class="results-model-btn" data-model="videollama">VideoLLaMA2</button>
-            <button class="results-model-btn" data-model="closed">Closed-source MLLM</button>
+            <!-- <button class="results-model-btn active" data-model="qwen-tuned">
+              Qwen2.5-Omni (ours tuned)
+            </button> -->
+            <button class="results-model-btn" data-model="qwen-base">
+              Qwen2.5-Omni (base)
+            </button>
+            <button class="results-model-btn" data-model="videollama">
+              VideoLLaMA2
+            </button>
+            <button class="results-model-btn" data-model="gemini_2-0_fl">
+              Gemini-2.0-Flash-Lite
+            </button>
+            <button class="results-model-btn" data-model="pandagpt">
+              PandaGPT
+            </button>
+            <button class="results-model-btn" data-model="chatbridge">
+              ChatBridge
+            </button>
+            <button class="results-model-btn" data-model="qwen3">
+              Qwen3-Omni-30B-Instruct
+            </button>
+            <button class="results-model-btn" data-model="gemini_2_0_f">
+              Gemini-2.0-Flash
+            </button>
+            <button class="results-model-btn" data-model="gemini_2_5_p">
+              Gemini-2.5-Pro
+            </button>
           </div>
-          <div id="results-model-description" class="scenario-description">
-            <h4>Qwen2.5-Omni (alignment-aware tuned)</h4>
-            <p>
-              Our tuned model maintains high accuracy under aligned conditions and shows the
-              smallest degradation under semantic AV conflicts and misleading text, indicating
-              better modality selectivity and grounding.
-            </p>
-          </div>
+
+          <p class="results-model-hint">
+            Each profile shows four views: <strong>Unimodal Ablations</strong>,
+            <strong>Semantic Misalignment</strong>, <strong>Misleading Captions</strong>,
+            and <strong>Long Context</strong>.
+          </p>
         </article>
 
-        <article class="card">
-          <h3>Robustness Plots</h3>
-          <p class="result-text">
-            The figure below is swapped dynamically by the model selector. Place per-model plots
-            here (e.g., grouped bar charts for aligned, misaligned, misleading, and ablation
-            settings).
+        <!-- Right: per-model description + 4 small plots -->
+        <article class="card results-model-right">
+          <h3>Robustness Profiles</h3>
+          <p id="results-model-description" class="result-text">
+            Our tuned model maintains high accuracy under aligned conditions and shows the smallest
+            degradation under semantic AV conflicts and misleading text, indicating better modality
+            selectivity and grounding.
           </p>
-          <div class="results-figure">
-            <img id="results-model-figure" src="assets/img/results_model_qwen_tuned.png" alt="Model robustness plot" />
+
+          <div class="results-model-plot-grid">
+            <div class="results-model-plot-card">
+              <h4>Unimodal Ablations</h4>
+              <div class="results-figure results-figure-compact">
+                <img id="results-model-img-unimodal" src="assets/img/results_qwen_tuned_unimodal.png"
+                  alt="Unimodal ablation robustness for selected model" />
+              </div>
+            </div>
+
+            <div class="results-model-plot-card">
+              <h4>Semantic Misalignment</h4>
+              <div class="results-figure results-figure-compact">
+                <img id="results-model-img-semantic" src="assets/img/results_qwen_tuned_semantic.png"
+                  alt="Semantic AV misalignment robustness for selected model" />
+              </div>
+            </div>
+
+            <div class="results-model-plot-card">
+              <h4>Misleading Captions</h4>
+              <div class="results-figure results-figure-compact">
+                <img id="results-model-img-text" src="assets/img/results_qwen_tuned_text.png"
+                  alt="Misleading caption robustness for selected model" />
+              </div>
+            </div>
+
+            <div class="results-model-plot-card">
+              <h4>Long Context</h4>
+              <div class="results-figure results-figure-compact">
+                <img id="results-model-img-context" src="assets/img/results_qwen_tuned_context.png"
+                  alt="Long-context robustness for selected model" />
+              </div>
+            </div>
           </div>
         </article>
       </div>
@@ -553,8 +606,8 @@
       <article class="card interactive-card whitebox-card">
         <h3>Choose Model for White-Box View</h3>
         <p>
-          Toggle between Qwen2.5-Omni and VideoLLaMA2 to see their respective attention statistics,
-          using the same visual style as in the paper and supplement.
+          Toggle between Qwen2.5-Omni and VideoLLaMA2 to see their respective attention statistics, using the same
+          visual style as in the paper and supplement.
         </p>
         <div class="whitebox-model-buttons">
           <button class="whitebox-model-btn active" data-wmodel="qwen">Qwen2.5-Omni</button>
@@ -564,25 +617,57 @@
           <h4>Qwen2.5-Omni: Modality Selectivity</h4>
           <p>
             Qwen2.5-Omni shows strong textual dominance but exhibits noticeable shifts between
-            audio and video tokens under modality-specific prompts, especially after alignment-aware
-            tuning.
+            audio and video tokens under modality-specific prompts, especially during misalinged samples.
           </p>
         </div>
       </article>
 
       <div class="results-grid whitebox-grid">
         <!-- Cohen's D / curves -->
-        <article class="result-card">
+        <article class="result-card cohen-card">
           <h3>Cohen's D &amp; Layer-wise Modality Shifts</h3>
-          <p class="result-text">
-            Effect sizes between attention distributions under visual vs. audio prompts, per layer,
-            before and after alignment-aware tuning. Swap in the exact plots for each model.
-          </p>
-          <div class="results-figure">
-            <img id="whitebox-cohen-figure" src="assets/img/whitebox_qwen_cohen.png"
-              alt="Layer-wise Cohen's D curves for Qwen" />
+
+          <div class="cohen-layout">
+
+            <!-- LEFT: text -->
+            <div class="cohen-explainer">
+              <p class="result-text">
+                Cohen's&nbsp;D measures how far apart two attention distributions are
+                (in standard-deviation units): attention under a
+                <strong>visual prompt</strong> vs attention under an
+                <strong>audio prompt</strong>.
+              </p>
+
+              <div class="cohen-pill-list">
+                <div class="cohen-pill"><strong>D &gt; 0</strong> · visual-prompt attention is higher</div>
+                <div class="cohen-pill"><strong>D &lt; 0</strong> · audio-prompt attention is higher</div>
+                <div class="cohen-pill"><strong>|D| large</strong> · stronger modality shift</div>
+              </div>
+            </div>
+
+            <!-- RIGHT: two side-by-side plots -->
+            <div class="cohen-plots">
+              <div class="cohen-plot">
+                <img id="whitebox-cohen-video" src="assets/img/whitebox_qwen_cohen_video.png"
+                  alt="Cohen's D for video tokens" />
+                <p class="cohen-subcap">
+                  <strong>Video tokens:</strong> D &gt; 0 → higher attention under the visual prompt.
+                </p>
+              </div>
+
+              <div class="cohen-plot">
+                <img id="whitebox-cohen-audio" src="assets/img/whitebox_qwen_cohen_audio.png"
+                  alt="Cohen's D for audio tokens" />
+                <p class="cohen-subcap">
+                  <strong>Audio tokens:</strong> D &lt; 0 → higher attention under the audio prompt.
+                </p>
+              </div>
+            </div>
+
           </div>
         </article>
+
+
 
         <!-- Heatmaps -->
         <article class="result-card">

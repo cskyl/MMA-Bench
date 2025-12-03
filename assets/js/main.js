@@ -74,29 +74,113 @@ const RESULTS_MODELS = {
       "Our tuned model maintains high accuracy under aligned conditions and shows the " +
       "smallest degradation under semantic AV conflicts and misleading text, indicating " +
       "better modality selectivity and grounding.",
-    img: "assets/img/results_model_qwen_tuned.png"
+    plots: {
+      unimodal: "assets/img/results_qwen_tuned_unimodal.png",
+      semantic: "assets/img/results_qwen_tuned_semantic.png",
+      text: "assets/img/results_qwen_tuned_text.png",
+      context: "assets/img/results_qwen_tuned_context.png"
+    }
   },
   "qwen-base": {
-    title: "Qwen2.5-Omni (base)",
+    title: "Qwen2.5-Omni",
     text:
       "The base model already performs strongly on standard benchmarks but loses a large " +
       "fraction of accuracy when modalities conflict, especially under misleading text prompts.",
-    img: "assets/img/results_model_qwen_base.png"
+    plots: {
+      unimodal: "assets/img/unimodal_qwen.png",
+      semantic: "assets/img/semantic_misalign_qwen.png",
+      text: "assets/img/text_misalign_qwen.png",
+      context: "assets/img/long_context_qwen.png"
+    }
   },
-  videollama: {
+  "videollama": {
     title: "VideoLLaMA2",
     text:
       "VideoLLaMA2 is more vision-centric and can be competitive on visual prompts, but " +
       "shows weaker audio reasoning and is highly sensitive to textual distractions.",
-    img: "assets/img/results_model_videollama.png"
+    plots: {
+      unimodal: "assets/img/unimodal_vl2.png",
+      semantic: "assets/img/semantic_misalign_vl2.png",
+      text: "assets/img/text_misalign_vl2.png",
+      context: "assets/img/long_context_vl2.png"
+    }
   },
-  closed: {
-    title: "Closed-source MLLM",
+  "gemini_2-0_fl": {
+    title: "Gemini-2.0-Flash-Lite",
     text:
       "The closed-source model achieves strong headline scores but still exhibits notable " +
       "drops under semantic AV conflicts and misleading captions, revealing remaining " +
       "modality bias.",
-    img: "assets/img/results_model_closed.png"
+    plots: {
+      unimodal: "assets/img/unimodal_gemini_2_0_flash_lite.png",
+      semantic: "assets/img/semantic_misalign_gemini_2_0_flash_lite.png",
+      text: "assets/img/text_misalign_gemini_2_0_flash_lite.png",
+      context: "assets/img/long_context_gemini_2_0_flash_lite.png"
+    }
+  },
+  "pandagpt": {
+    title: "PandaGPT",
+    text:
+      "PandaGPT shows competitive performance on aligned data but suffers significant " +
+      "degradation under modality conflicts and misleading text, indicating challenges " +
+      "in robust multimodal understanding.",
+    plots: {
+      unimodal: "assets/img/unimodal_pandagpt.png",
+      semantic: "assets/img/semantic_misalign_pandagpt.png",
+      text: "assets/img/text_misalign_pandagpt.png",
+      context: "assets/img/long_context_pandagpt.png"
+    }
+  },
+  "chatbridge": {
+    title: "ChatBridge",
+    text:
+      "ChatBridge performs reasonably well on aligned scenarios but exhibits large " +
+      "accuracy drops when faced with semantic AV misalignment and misleading captions, " +
+      "highlighting limitations in modality integration.",
+    plots: {
+      unimodal: "assets/img/unimodal_Chatbridge.png",
+      semantic: "assets/img/semantic_misalign_Chatbridge.png",
+      text: "assets/img/text_misalign_Chatbridge.png",
+      context: "assets/img/long_context_Chatbridge.png"
+    }
+  },
+  "qwen3": {
+    title: "Qwen3-Omni-30B-Instruct",
+    text:
+      "Qwen3-Omni-30B-Instruct demonstrates strong performance on aligned data but " +
+      "experiences significant drops under semantic AV conflicts and misleading text, " +
+      "indicating room for improvement in modality selectivity.",
+    plots: {
+      unimodal: "assets/img/unimodal_Qwen3-Omni-30B-Instruct.png",
+      semantic: "assets/img/semantic_misalign_Qwen3-Omni-30B-Instruct.png",
+      text: "assets/img/text_misalign_Qwen3-Omni-30B-Instruct.png",
+      context: "assets/img/long_context_Qwen3-Omni-30B-Instruct.png"
+    }
+  },
+  "gemini_2_0_f": {
+    title: "Gemini-2.0-Flash",
+    text:
+      "Gemini-2.0-Flash shows competitive results on standard benchmarks but still " +
+      "suffers notable accuracy degradation under semantic AV misalignment and misleading " +
+      "captions, revealing challenges in robust multimodal reasoning.",
+    plots: {
+      unimodal: "assets/img/unimodal_gemini-2.0-Flash.png",
+      semantic: "assets/img/semantic_misalign_gemini-2.0-Flash.png",
+      text: "assets/img/text_misalign_gemini-2.0-Flash.png",
+      context: "assets/img/long_context_gemini-2.0-Flash.png"
+    }
+  },
+  "gemini_2_5_p": {
+    title: "Gemini-2.5-Pro",
+    text:
+      "Gemini-2.5-Pro achieves strong performance on aligned and misaligned data but experiences " +
+      "showing superior performance among current SoTA models.",
+    plots: {
+      unimodal: "assets/img/unimodal_gemini-2.5-pro.png",
+      semantic: "assets/img/semantic_misalign_gemini-2.5-pro.png",
+      text: "assets/img/text_misalign_gemini-2.5-pro.png",
+      context: "assets/img/long_context_gemini-2.5-pro.png"
+    }
   }
 };
 
@@ -107,7 +191,8 @@ const WHITEBOX_MODELS = {
     text:
       "Qwen2.5-Omni shows strong textual dominance but exhibits noticeable shifts between " +
       "audio and video tokens under modality-specific prompts, especially after alignment-aware tuning.",
-    cohenImg: "assets/img/whitebox_qwen_cohen.png",
+    cohenVideoImg: "assets/img/whitebox_qwen_cohen_video.png",
+    cohenAudioImg: "assets/img/whitebox_qwen_cohen_audio.png",
     heatmapImg: "assets/img/whitebox_qwen_heatmap.png"
   },
   videollama: {
@@ -116,10 +201,12 @@ const WHITEBOX_MODELS = {
       "VideoLLaMA2 allocates more attention to visual tokens across layers. Audio tokens " +
       "are comparatively under-utilized, and effect-size curves show weaker reallocation when " +
       "switching between audio and visual prompts.",
-    cohenImg: "assets/img/whitebox_videollama_cohen.png",
+    cohenVideoImg: "assets/img/whitebox_videollama_cohen_video.png",
+    cohenAudioImg: "assets/img/whitebox_videollama_cohen_audio.png",
     heatmapImg: "assets/img/whitebox_videollama_heatmap.png"
   }
 };
+
 
 const DEFAULT_SCENARIO_KEY = 'baseline';
 
@@ -282,24 +369,55 @@ function initAttentionToggle() {
 function initResultsSelector() {
   const modelButtons = document.querySelectorAll(".results-model-btn");
   const modelDescription = document.getElementById("results-model-description");
-  const modelFigure = document.getElementById("results-model-figure");
+  const imgUnimodal = document.getElementById("results-model-img-unimodal");
+  const imgSemantic = document.getElementById("results-model-img-semantic");
+  const imgText = document.getElementById("results-model-img-text");
+  const imgContext = document.getElementById("results-model-img-context");
 
-  if (!modelButtons.length || !modelDescription || !modelFigure) return;
+  if (
+    !modelButtons.length ||
+    !modelDescription ||
+    !imgUnimodal ||
+    !imgSemantic ||
+    !imgText ||
+    !imgContext
+  ) {
+    return;
+  }
 
   function setModel(key) {
     const info = RESULTS_MODELS[key];
     if (!info) return;
 
+    // Update active button
     modelButtons.forEach((b) =>
       b.classList.toggle("active", b.dataset.model === key)
     );
 
+    // Update description text
     modelDescription.innerHTML = `
-      <h4>${info.title}</h4>
-      <p>${info.text}</p>
+      <strong>${info.title}.</strong> ${info.text}
     `;
-    modelFigure.src = info.img;
-    modelFigure.alt = `${info.title} robustness plot`;
+
+    // Update all four images
+    if (info.plots) {
+      if (info.plots.unimodal) {
+        imgUnimodal.src = info.plots.unimodal;
+        imgUnimodal.alt = `Unimodal ablation robustness for ${info.title}`;
+      }
+      if (info.plots.semantic) {
+        imgSemantic.src = info.plots.semantic;
+        imgSemantic.alt = `Semantic AV misalignment robustness for ${info.title}`;
+      }
+      if (info.plots.text) {
+        imgText.src = info.plots.text;
+        imgText.alt = `Misleading caption robustness for ${info.title}`;
+      }
+      if (info.plots.context) {
+        imgContext.src = info.plots.context;
+        imgContext.alt = `Long-context robustness for ${info.title}`;
+      }
+    }
   }
 
   modelButtons.forEach((btn) => {
@@ -309,27 +427,26 @@ function initResultsSelector() {
   const defaultKey =
     Array.from(modelButtons).find((b) => b.classList.contains("active"))
       ?.dataset.model || modelButtons[0].dataset.model;
+
   setModel(defaultKey);
 }
+
+
+/* ---------- White-box model selector ---------- */
 
 /* ---------- White-box model selector ---------- */
 
 function initWhiteboxSelector() {
   const whiteboxButtons = document.querySelectorAll(".whitebox-model-btn");
-  const whiteboxDescription = document.getElementById(
-    "whitebox-model-description"
-  );
-  const whiteboxCohenFigure = document.getElementById("whitebox-cohen-figure");
-  const whiteboxHeatmapFigure = document.getElementById(
-    "whitebox-heatmap-figure"
-  );
+  const whiteboxDescription = document.getElementById("whitebox-model-description");
 
-  if (
-    !whiteboxButtons.length ||
-    !whiteboxDescription ||
-    !whiteboxCohenFigure ||
-    !whiteboxHeatmapFigure
-  ) {
+  // New IDs from the updated HTML
+  const cohenVideoFigure = document.getElementById("whitebox-cohen-video");
+  const cohenAudioFigure = document.getElementById("whitebox-cohen-audio");
+  const whiteboxHeatmapFigure = document.getElementById("whitebox-heatmap-figure");
+
+  // If no buttons or description, nothing to do
+  if (!whiteboxButtons.length || !whiteboxDescription) {
     return;
   }
 
@@ -337,27 +454,46 @@ function initWhiteboxSelector() {
     const info = WHITEBOX_MODELS[key];
     if (!info) return;
 
+    // Toggle active button
     whiteboxButtons.forEach((b) =>
       b.classList.toggle("active", b.dataset.wmodel === key)
     );
 
+    // Update title + text in the description block
     whiteboxDescription.innerHTML = `
       <h4>${info.title}</h4>
       <p>${info.text}</p>
     `;
-    whiteboxCohenFigure.src = info.cohenImg;
-    whiteboxCohenFigure.alt = `${info.title} Cohen's D curves`;
-    whiteboxHeatmapFigure.src = info.heatmapImg;
-    whiteboxHeatmapFigure.alt = `${info.title} attention heatmaps`;
+
+    // Swap Cohen's D plots if elements & paths exist
+    if (cohenVideoFigure && info.cohenVideoImg) {
+      cohenVideoFigure.src = info.cohenVideoImg;
+      cohenVideoFigure.alt = `Cohen's D curves for video tokens · ${info.title}`;
+    }
+
+    if (cohenAudioFigure && info.cohenAudioImg) {
+      cohenAudioFigure.src = info.cohenAudioImg;
+      cohenAudioFigure.alt = `Cohen's D curves for audio tokens · ${info.title}`;
+    }
+
+    // Swap heatmap figure
+    if (whiteboxHeatmapFigure && info.heatmapImg) {
+      whiteboxHeatmapFigure.src = info.heatmapImg;
+      whiteboxHeatmapFigure.alt = `${info.title} attention heatmaps`;
+    }
   }
 
+  // Wire up click handlers
   whiteboxButtons.forEach((btn) => {
     btn.addEventListener("click", () => setWhiteboxModel(btn.dataset.wmodel));
   });
 
+  // Initialize from active button or default to first
   const defaultKey =
     Array.from(whiteboxButtons).find((b) => b.classList.contains("active"))
       ?.dataset.wmodel || whiteboxButtons[0].dataset.wmodel;
+
   setWhiteboxModel(defaultKey);
 }
+
 
