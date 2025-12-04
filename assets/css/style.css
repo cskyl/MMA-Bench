@@ -7,7 +7,7 @@
   --accent-soft: rgba(125, 249, 255, 0.14);
   --accent-dark: #072226;
   --text-main: #0d1020;
-  --text-soft: #4b526b;
+  --text-soft: #344052;
   --border-subtle: rgba(15, 23, 42, 0.08);
   --card-bg: #ffffff;
 }
@@ -140,7 +140,7 @@ body {
   width: 100%;
   border-radius: 22px;
   overflow: hidden;
-  border: 1px solid rgba(148, 163, 184, 0.6);
+  /* border: 1px solid rgba(148, 163, 184, 0.6); */
   box-shadow: 0 22px 50px rgba(15, 23, 42, 0.85);
 }
 
@@ -314,7 +314,7 @@ h1 {
 }
 
 .section-header p {
-  font-size: 0.95rem;
+  font-size: 1rem;
   color: var(--text-soft);
   line-height: 1.6;
 }
@@ -449,7 +449,7 @@ h1 {
 .qa-item {
   border-radius: 12px;
   border: 1px solid var(--border-subtle);
-  padding: 10px 12px 10px 38px; /* space for icon */
+  padding: 10px 12px 10px 44px; /* space for icon */
   background: #ffffff;
   position: relative;
 }
@@ -461,8 +461,9 @@ h1 {
   left: 12px;
   top: 50%;
   transform: translateY(-50%);
-  width: 18px;
-  height: 18px;
+  width: 24x;
+  height: 24px;
+  font-size: 20px;
   opacity: 0.9;
 }
 
@@ -505,7 +506,7 @@ h1 {
   border: 1px solid var(--border-subtle);
   padding: 14px 14px 16px;
   box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
-  font-size: 0.9rem;
+  font-size: 1rem;
 }
 
 .result-card h3 {

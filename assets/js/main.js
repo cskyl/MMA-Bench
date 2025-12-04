@@ -7,7 +7,7 @@ const SCENARIOS = {
       "Both visual and audio questions have consistent answers; " +
       "models should behave like ideal multimodal reasoners.",
     video: "assets/video/canidae_aligned.mp4",
-    question: "Which class best describes the visual content of this video? Options: [List of classes]. Answer using a single class name.",
+    question: "Which class best describes the visual/audio content of this video? Options: [List of classes]. Answer using a single class name.",
     audioAnswer: "Canidae",
     videoAnswer: "Canidae"
   },
@@ -18,7 +18,7 @@ const SCENARIOS = {
       "Correct answers differ between visual and audio questions, " +
       "revealing whether models can selectively trust the right stream.",
     video: "assets/video/misaligned_printer_aud_cashregis_video.mp4",
-    question: "Which class best describes the visual content of this video? Options: [List of classes]. Answer using a single class name.",
+    question: "Which class best describes the visual/audio content of this video? Options: [List of classes]. Answer using a single class name.",
     audioAnswer: "Printer",
     videoAnswer: "Cash_register"
   },
@@ -28,7 +28,7 @@ const SCENARIOS = {
       "We keep audio and video aligned but prepend a wrong caption in the text query. " +
       "This tests whether language overrides clear audio-visual evidence.",
     video: "assets/video/caption_peturb.mp4",
-    question: "Video_caption: Fowl. Which class best describes the visual content of this video? Options: [List of classes]. Answer the question using a single word or phrase.",
+    question: "Video_caption: Fowl. Which class best describes the visual/audio content of this video? Options: [List of classes]. Answer the question using a single word or phrase.",
     audioAnswer: "Accordion",
     videoAnswer: "Acccordion"
   },
@@ -38,7 +38,7 @@ const SCENARIOS = {
       "We append long random text after the query while leaving the audio-video semantically intact. " +
       "This probes long-context robustness: can the model retain correct grounding?",
     video: "assets/video/long_context.mp4",
-    question: "Which class best describes the visual content of this video? Options: [List of classes]. Answer using a single class name. t n g u l m n t z f (5000 random letters)...",
+    question: "Which class best describes the visual/audio content of this video? Options: [List of classes]. Answer using a single class name. t n g u l m n t z f (5000 random letters)...",
     audioAnswer: "Explosion",
     videoAnswer: "Explosion"
   },
@@ -191,9 +191,9 @@ const WHITEBOX_MODELS = {
     text:
       "Qwen2.5-Omni shows strong textual dominance but exhibits noticeable shifts between " +
       "audio and video tokens under modality-specific prompts, especially after alignment-aware tuning.",
-    cohenVideoImg: "assets/img/whitebox_qwen_cohen_video.png",
-    cohenAudioImg: "assets/img/whitebox_qwen_cohen_audio.png",
-    heatmapImg: "assets/img/whitebox_qwen_heatmap.png"
+    cohenVideoImg: "assets/img/cohensD_video_tokens_qwen.png",
+    cohenAudioImg: "assets/img/cohensD_audio_tokens_qwen.png",
+    heatmapImg: "assets/img/heatmap_qwen.png"
   },
   videollama: {
     title: "VideoLLaMA2: Vision-Centric Attention",
@@ -201,9 +201,9 @@ const WHITEBOX_MODELS = {
       "VideoLLaMA2 allocates more attention to visual tokens across layers. Audio tokens " +
       "are comparatively under-utilized, and effect-size curves show weaker reallocation when " +
       "switching between audio and visual prompts.",
-    cohenVideoImg: "assets/img/whitebox_videollama_cohen_video.png",
-    cohenAudioImg: "assets/img/whitebox_videollama_cohen_audio.png",
-    heatmapImg: "assets/img/whitebox_videollama_heatmap.png"
+    cohenVideoImg: "assets/img/cohensD_video_tokens_vl2.png",
+    cohenAudioImg: "assets/img/cohensD_audio_tokens_vl2.png",
+    heatmapImg: "assets/img/heatmap_vl2.png"
   }
 };
 
@@ -432,7 +432,6 @@ function initResultsSelector() {
 }
 
 
-/* ---------- White-box model selector ---------- */
 
 /* ---------- White-box model selector ---------- */
 
