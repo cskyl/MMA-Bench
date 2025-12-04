@@ -84,8 +84,7 @@ const RESULTS_MODELS = {
   "qwen-base": {
     title: "Qwen2.5-Omni",
     text:
-      "The base model already performs strongly on standard benchmarks but loses a large " +
-      "fraction of accuracy when modalities conflict, especially under misleading text prompts.",
+      "Uses both video and audio cues - ablating either hurts aligned accuracy - but under semantic AV conflicts and long context its audio answers collapse while visual ones stay strong, revealing a vision- and text-leaning model that struggles to follow the requested modality.",
     plots: {
       unimodal: "assets/img/unimodal_qwen.png",
       semantic: "assets/img/semantic_misalign_qwen.png",
@@ -96,8 +95,7 @@ const RESULTS_MODELS = {
   "videollama": {
     title: "VideoLLaMA2",
     text:
-      "VideoLLaMA2 is more vision-centric and can be competitive on visual prompts, but " +
-      "shows weaker audio reasoning and is highly sensitive to textual distractions.",
+      "Shows similar cross-modal use of both streams, with clear drops when either audio or video is removed, and modest resilience to misleading captions; however, it still loses a lot of accuracy when audio and video disagree or when prompts are buried in long context.",
     plots: {
       unimodal: "assets/img/unimodal_vl2.png",
       semantic: "assets/img/semantic_misalign_vl2.png",
@@ -108,9 +106,7 @@ const RESULTS_MODELS = {
   "gemini_2-0_fl": {
     title: "Gemini-2.0-Flash-Lite",
     text:
-      "The closed-source model achieves strong headline scores but still exhibits notable " +
-      "drops under semantic AV conflicts and misleading captions, revealing remaining " +
-      "modality bias.",
+      "Very strong on aligned visual questions but barely changes when audio is muted or corrupted, and its audio-prompt accuracy collapses under AV conflict and misleading text - effectively “seeing without listening” and heavily over-trusting captions.",
     plots: {
       unimodal: "assets/img/unimodal_gemini_2_0_flash_lite.png",
       semantic: "assets/img/semantic_misalign_gemini_2_0_flash_lite.png",
@@ -121,9 +117,7 @@ const RESULTS_MODELS = {
   "pandagpt": {
     title: "PandaGPT",
     text:
-      "PandaGPT shows competitive performance on aligned data but suffers significant " +
-      "degradation under modality conflicts and misleading text, indicating challenges " +
-      "in robust multimodal understanding.",
+      "Overall weakest black-box performance: it already lags on aligned data, is highly sensitive to modality conflicts and misleading captions, and is further limited by a short context window, highlighting challenges in robust multimodal grounding.",
     plots: {
       unimodal: "assets/img/unimodal_pandagpt.png",
       semantic: "assets/img/semantic_misalign_pandagpt.png",
@@ -134,9 +128,7 @@ const RESULTS_MODELS = {
   "chatbridge": {
     title: "ChatBridge",
     text:
-      "ChatBridge performs reasonably well on aligned scenarios but exhibits large " +
-      "accuracy drops when faced with semantic AV misalignment and misleading captions, " +
-      "highlighting limitations in modality integration.",
+      "Performs competitively on aligned clips, but behaves in a strongly text-biased way: misleading captions or text-prompt conflicts cause large drops, especially for audio questions, showing that it often trusts the language channel over the actual AV evidence.",
     plots: {
       unimodal: "assets/img/unimodal_Chatbridge.png",
       semantic: "assets/img/semantic_misalign_Chatbridge.png",
@@ -147,9 +139,7 @@ const RESULTS_MODELS = {
   "qwen3": {
     title: "Qwen3-Omni-30B-Instruct",
     text:
-      "Qwen3-Omni-30B-Instruct demonstrates strong performance on aligned data but " +
-      "experiences significant drops under semantic AV conflicts and misleading text, " +
-      "indicating room for improvement in modality selectivity.",
+      "Matches Gemini-2.5-Pro on many aligned metrics, yet exhibits steeper declines under AV conflicts and long-context tails, indicating good raw capability but less stable integration of modalities and weaker resistance to off-topic or conflicting cues.",
     plots: {
       unimodal: "assets/img/unimodal_Qwen3-Omni-30B-Instruct.png",
       semantic: "assets/img/semantic_misalign_Qwen3-Omni-30B-Instruct.png",
@@ -160,9 +150,7 @@ const RESULTS_MODELS = {
   "gemini_2_0_f": {
     title: "Gemini-2.0-Flash",
     text:
-      "Gemini-2.0-Flash shows competitive results on standard benchmarks but still " +
-      "suffers notable accuracy degradation under semantic AV misalignment and misleading " +
-      "captions, revealing challenges in robust multimodal reasoning.",
+      "High aligned accuracy with strong visual understanding, but under semantic misalignment and misleading captions its audio responses degrade sharply, revealing a tendency to over-weight visual and textual hints relative to the intended audio cue.",
     plots: {
       unimodal: "assets/img/unimodal_gemini-2.0-Flash.png",
       semantic: "assets/img/semantic_misalign_gemini-2.0-Flash.png",
@@ -173,8 +161,7 @@ const RESULTS_MODELS = {
   "gemini_2_5_p": {
     title: "Gemini-2.5-Pro",
     text:
-      "Gemini-2.5-Pro achieves strong performance on aligned and misaligned data but experiences " +
-      "showing superior performance among current SoTA models.",
+      "Best overall black-box robustness: retains strong performance under unimodal ablations, AV conflicts, misleading captions, and long contexts, though even here audio prompts remain the weakest link, reflecting a residual visual/text preference in extreme cases.",
     plots: {
       unimodal: "assets/img/unimodal_gemini-2.5-pro.png",
       semantic: "assets/img/semantic_misalign_gemini-2.5-pro.png",
@@ -189,8 +176,7 @@ const WHITEBOX_MODELS = {
   qwen: {
     title: "Qwen2.5-Omni: Modality Selectivity",
     text:
-      "Qwen2.5-Omni shows strong textual dominance but exhibits noticeable shifts between " +
-      "audio and video tokens under modality-specific prompts, especially after alignment-aware tuning.",
+      "Shows strong text-token dominance across layers, with early and mid-layers allocating most attention mass to language tokens even when the question is purely audio/video. Under misalignment, its prompt-driven attention shift is fairly good, yielding good Cohen's-D separation between AV prompts and explaining its black-box performance on audio-focused questions.",
     cohenVideoImg: "assets/img/cohensD_video_tokens_qwen.png",
     cohenAudioImg: "assets/img/cohensD_audio_tokens_qwen.png",
     heatmapImg: "assets/img/heatmap_qwen.png"
@@ -198,15 +184,163 @@ const WHITEBOX_MODELS = {
   videollama: {
     title: "VideoLLaMA2: Vision-Centric Attention",
     text:
-      "VideoLLaMA2 allocates more attention to visual tokens across layers. Audio tokens " +
-      "are comparatively under-utilized, and effect-size curves show weaker reallocation when " +
-      "switching between audio and visual prompts.",
+      "Attention patterns indicate a moderately balanced AV integration, with both modalities receiving meaningful mass in mid/late layers. Yet, under misalignment, the shift between video- and audio-prompt attention is small, producing flat Cohen's-D curves. This reveals limited ability to re-route attention when cues disagree, consistent with its black-box misalignment trend.",
     cohenVideoImg: "assets/img/cohensD_video_tokens_vl2.png",
     cohenAudioImg: "assets/img/cohensD_audio_tokens_vl2.png",
     heatmapImg: "assets/img/heatmap_vl2.png"
   }
 };
 
+const demoExamples = [
+  // AUDIO-PROMPT examples
+  {
+    id: "accordion_frog_audio",
+    split: "audio",
+    promptType: "audio",
+    title: "Accordion player with frog sounds",
+    videoSrc: "assets/video/YRz7RBslEAG0_repDiff_Frog_0.mp4",   // <-- your file
+    audioContent: "Frog (misaligned audio)",
+    question: "Which class best describes the audio content of this video?",
+    groundTruth: "Frog",
+    baselineAnswer: "Bird If you have any other questions about the audio content or anything else, feel free to ask!",
+    tunedAnswer: "Frog"
+  },
+  {
+    id: "accordion_rain_audio",
+    split: "audio",
+    promptType: "audio",
+    title: "Accordion player with rain audio in the background",
+    videoSrc: "assets/video/Ygefp9ta8LTA_repDiff_Rain_0.mp4",
+    audioContent: "Rain sounds (misaligned audio)",
+    question: "Which class best describes the audio content of this video?",
+    groundTruth: "Rain",
+    baselineAnswer: "Accordion",
+    tunedAnswer: "Rain"
+  },
+  {
+    id: "bird_glass_audio",
+    split: "audio",
+    promptType: "audio",
+    title: "Pet bird with glass audio",
+    videoSrc: "assets/video/Y7xkj4XqaynU_repDiff_Glass_0.mp4",
+    audioContent: "Glass (misaligned audio)",
+    question: "Which class best describes the audio content of this video?",
+    groundTruth: "Glass",
+    baselineAnswer: "None of the above",
+    tunedAnswer: "Glass"
+  },
+  {
+    id: "parrots_bowedstring_audio",
+    split: "audio",
+    promptType: "audio",
+    title: "Parrots on a wall with audio of a bowed-string instrument",
+    videoSrc: "assets/video/YSwZxKE3CnEg_repDiff_Bowed_string_instrument_0.mp4",
+    audioContent: "Bowed_string_instrument (misaligned audio)",
+    question: "Which class best describes the audio content of this video?",
+    groundTruth: "Bowed_string_instrument",
+    baselineAnswer: "Bird What do you think about that?",
+    tunedAnswer: "Bowed_string_instrument"
+  },
+  {
+    id: "cage_glass_audio",
+    split: "audio",
+    promptType: "audio",
+    title: "Caged birds in video but glass sounds in audio",
+    videoSrc: "assets/video/YUypQOtbE8wg_repDiff_Glass_0.mp4",
+    audioContent: "Glass (misaligned audio)",
+    question: "Which class best describes the audio content of this video?",
+    groundTruth: "Glass",
+    baselineAnswer: "Bird If you have any other questions about the video or need more details, feel free to ask!",
+    tunedAnswer: "Glass"
+  },
+  {
+    id: "cello_didgeridoo_audio",
+    split: "audio",
+    promptType: "audio",
+    title: "Cellist playing in video with didgeridoo audio",
+    videoSrc: "assets/video/YkX4-OMWCdCc_repDiff_Didgeridoo_0.mp4",
+    audioContent: "Didgeridoo (misaligned audio)",
+    question: "Which class best describes the audio content of this video?",
+    groundTruth: "Didgeridoo",
+    baselineAnswer: "Bowed_string_instrument",
+    tunedAnswer: "Didgeridoo"
+  },
+  {
+    id: "trumpet_fryingfood_audio",
+    split: "audio",
+    promptType: "audio",
+    title: "Woman playing trumpet with frying food audio",
+    videoSrc: "assets/video/YA_0xhMEZ1Cg_repDiff_Frying_food_0.mp4",
+    audioContent: "Frying_food (misaligned audio)",
+    question: "Which class best describes the audio content of this video?",
+    groundTruth: "Glass",
+    baselineAnswer: "Brass_instrument What do you think about the audio content?",
+    tunedAnswer: "Frying_food"
+  },
+  {
+    id: "trumpet_cat_audio",
+    split: "audio",
+    promptType: "audio",
+    title: "Woman playing trumpet overlayed with cat meowing audio",
+    videoSrc: "assets/video/Y9ivV2chJLa4_repDiff_Cat_0.mp4",
+    audioContent: "Cat (Misaligned audio)",
+    question: "Which class best describes the audio content of this video?",
+    groundTruth: "Cat",
+    baselineAnswer: "Brass_instrument",
+    tunedAnswer: "Cat"
+  },
+
+
+  // VISUAL-PROMPT examples
+  {
+    id: "applause_clock_visual",
+    split: "visual",
+    promptType: "visual",
+    title: "Audience applauding with clock audio",
+    videoSrc: "assets/video/YLEn3f97acaw_repDiff_Clock_0.mp4",
+    audioContent: "Clock (misaligned audio)",
+    question: "Which class best describes the visual content of this video?",
+    groundTruth: "Applause",
+    baselineAnswer: "Clock",
+    tunedAnswer: "Applause"
+  },
+  {
+    id: "bird_clapping_visual",
+    split: "visual",
+    promptType: "visual",
+    title: "Bird on perch with clapping audio",
+    videoSrc: "assets/video/YPkDHPoMjvJ8_repDiff_Clapping_0.mp4",
+    audioContent: "Clapping (misaligned audio)",
+    question: "Which class best describes the visual content of this video?",
+    groundTruth: "Bird",
+    baselineAnswer: "Applause",
+    tunedAnswer: "Bird"
+  },
+  {
+    id: "skybird_glass_visual",
+    split: "visual",
+    promptType: "visual",
+    title: "Bird flying in the sky with glass audio",
+    videoSrc: "assets/video/YhRHKxyErgZw_repDiff_Glass_0.mp4",
+    audioContent: "Glass (misaligned audio)",
+    question: "Which class best describes the visual content of this video?",
+    groundTruth: "Bird",
+    baselineAnswer: "Glass",
+    tunedAnswer: "Bird"
+  },
+  {
+    id: "canidae_door_visual",
+    split: "visual",
+    promptType: "visual",
+    title: "Dogs wrestling its owner with door sounds",
+    videoSrc: "assets/video/Y3CZ1i2_tKn0_repDiff_Door_0.mp4",
+    audioContent: "Door (misaligned audio)",
+    question: "Which class best describes the visual content of this video?",
+    groundTruth: "Canidae",
+    baselineAnswer: "Cash_register",
+    tunedAnswer: "Canidae"
+  },
+];
 
 const DEFAULT_SCENARIO_KEY = 'baseline';
 
@@ -216,6 +350,22 @@ document.addEventListener("DOMContentLoaded", () => {
   initAttentionToggle();
   initResultsSelector();
   initWhiteboxSelector();
+  const demoToggles = document.querySelectorAll(".demo-toggle-group .toggle-btn");
+
+  if (demoToggles.length) {
+    demoToggles.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        if (btn.disabled) return;
+        demoToggles.forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        const split = btn.dataset.demoSplit || "audio";
+        renderDemoGallery(split);
+      });
+    });
+
+    // initial view
+    renderDemoGallery("audio");
+  }
 });
 
 /* ---------- Scenario Explorer ---------- */
@@ -495,4 +645,74 @@ function initWhiteboxSelector() {
   setWhiteboxModel(defaultKey);
 }
 
+// ─────────────────────────────────────────────
+// Qualitative demo gallery (semantic AV)
+// ─────────────────────────────────────────────
 
+function renderDemoGallery(split) {
+  const container = document.getElementById("demo-gallery");
+  if (!container) return;
+
+  const items = demoExamples.filter((ex) => ex.split === split);
+
+  container.innerHTML = items
+    .map((ex) => {
+      const promptBadge =
+        ex.promptType === "audio"
+          ? `<span class="demo-prompt-badge demo-prompt-audio">🔊 AUDIO prompt</span>`
+          : `<span class="demo-prompt-badge demo-prompt-visual">🎬 VISUAL prompt</span>`;
+
+      return `
+      <article class="demo-example-card">
+        <header class="demo-example-header">
+          <div>
+            ${promptBadge}
+            <h3>${ex.title}</h3>
+          </div>
+        </header>
+
+        <div class="demo-video-row">
+          <video controls preload="metadata">
+            <source src="${ex.videoSrc}" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        </div>
+
+        <div class="demo-meta">
+          <div class="demo-audio-tag">
+            <span class="demo-audio-icon">🔊</span>
+            <span><strong>Audio content:</strong> ${ex.audioContent}</span>
+          </div>
+          <p class="demo-question">
+            <strong>Q:</strong> ${ex.question}
+          </p>
+          <p class="demo-gt">
+            <strong>Ground Truth:</strong> ${ex.groundTruth}
+          </p>
+        </div>
+
+        <div class="demo-preds">
+          <div class="demo-pred-row demo-pred-baseline">
+            <div class="demo-pred-label">
+              <span class="demo-model-pill">Qwen2.5-Omni-7B</span>
+              <span class="demo-pred-tag demo-pred-tag-bad">Over-rides query</span>
+            </div>
+            <p class="demo-pred-text">${ex.baselineAnswer}</p>
+          </div>
+
+          <div class="demo-pred-row demo-pred-tuned">
+            <div class="demo-pred-label">
+              <span class="demo-model-pill demo-model-pill-ours">
+                Qwen2.5-Omni-7B + Ours
+              </span>
+              <span class="demo-pred-tag demo-pred-tag-good">
+                Grounded in requested modality
+              </span>
+            </div>
+            <p class="demo-pred-text">${ex.tunedAnswer}</p>
+          </div>
+        </div>
+      </article>`;
+    })
+    .join("");
+}

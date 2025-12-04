@@ -45,16 +45,21 @@
         </h1>
 
         <p class="hero-subtitle">
-          Decoding and architecting <strong>multimodal integration</strong> in large language models
-          under audio-video-text conflicts.
+          Decoding and architecting <strong>multimodal integration</strong> in MLLMs.
         </p>
 
         <p class="hero-summary">
-          <strong>MMA-Bench</strong> probes how modern multimodal LLMs behave when sight, sound,
-          and language disagree. We construct a controlled benchmark, analyze black-box behavior
-          and white-box attention patterns, and propose an
-          <strong>alignment-aware tuning</strong> strategy that yields stronger modality grounding
-          and more reliable cross-modal reasoning.
+          <strong>Multimodal LLMs often fail the moment their sensory inputs disagree.</strong>
+          Despite impressive capabilities, modern MLLMs show strong textual bias, collapse under audio-video conflict,
+          and struggle to identify which modality the user actually wants the model to ground in.
+          <br />
+          MMA-Bench is our effort to <strong>systematically expose and fix</strong> these failure modes.
+          We design controlled audio-video-text conflict scenarios, evaluate models under stress, inspect their internal
+          attention behaviour, and introduce a lightweight alignment-aware tuning method that restores proper modality
+          grounding.
+          <br />
+          Our key finding: <strong>MLLMs do not naturally know when to trust sight, sound, or text — but with targeted
+            supervision, they can learn.</strong>
         </p>
 
         <div class="hero-contribs">
@@ -64,7 +69,7 @@
           </div>
           <div class="contrib-item">
             <h3>Diagnostics</h3>
-            <p>Black-box robustness tests + layer/head-wise attention analysis.</p>
+            <p>Black-box robustness tests + whitebox layer-wise attention statistical analysis.</p>
           </div>
           <div class="contrib-item">
             <h3>Alignment Tuning</h3>
@@ -185,7 +190,8 @@
         <p>
           MMA-Bench is built in two stages. First, we apply ontology-driven filtering to clean
           the AudioSet label space. Second, we run an LLM-based audio-video consistency filter
-          to keep clips with clear, single-source events before constructing misaligned pairs.
+          to keep clips with clear, single-source events and then perform futher manual inspection before constructing
+          misaligned pairs.
         </p>
       </div>
 
@@ -222,11 +228,10 @@
     <!-- RESULTS OVERVIEW -->
     <section id="results" class="section">
       <div class="section-header">
-        <h2>Results on MMA-Bench and Related Benchmarks</h2>
+        <h2>Results on MMA-Bench</h2>
         <p>
           We evaluate a range of open- and closed-source MLLMs under controlled modality
           perturbations and report detailed trends across tasks, models, and perturbation types.
-          Plug in the main plots from the paper into the slots below.
         </p>
       </div>
 
@@ -235,7 +240,7 @@
           <h3>Overall Performance on MMA-Bench</h3>
           <p class="result-text">
             Accuracy on audio- and visual-focused questions under aligned and misaligned settings.
-            This figure summarizes how often models select the correct modality-specific answer.
+            This table summarizes how often models select the correct modality-specific answer.
           </p>
           <table class="results-table">
             <thead>
@@ -422,8 +427,8 @@
           <article class="result-card">
             <h3>Unimodal Ablations</h3>
             <p class="result-text">
-              Accuracy when we remove or corrupt one modality at a time (video blacked out, audio
-              muted, or text removed), revealing brittle integration and lack of abstention.
+              Accuracy when we remove or corrupt one modality at a time (video blacked out or audio
+              muted), revealing brittle integration and lack of abstention.
             </p>
             <table class="results-table small-table">
               <thead>
@@ -599,7 +604,7 @@
       <div class="section-header">
         <h2>White-Box Attention Diagnostics</h2>
         <p>
-          We inspect layer- and head-wise attention to quantify modality dominance and how
+          We inspect layer-wise attention to quantify modality dominance and later how
           alignment-aware tuning redistributes attention toward the queried modality. This section
           mirrors the white-box figures in the main paper and supplementary.
         </p>
@@ -609,8 +614,7 @@
       <article class="card interactive-card whitebox-card">
         <h3>Choose Model for White-Box View</h3>
         <p>
-          Toggle between Qwen2.5-Omni and VideoLLaMA2 to see their respective attention statistics, using the same
-          visual style as in the paper and supplement.
+          Toggle between Qwen2.5-Omni and VideoLLaMA2 to see their respective attention statistics and heatmaps.
         </p>
         <div class="whitebox-model-buttons">
           <button class="whitebox-model-btn active" data-wmodel="qwen">Qwen2.5-Omni</button>
@@ -670,13 +674,11 @@
           </div>
         </article>
 
-
-
         <!-- Heatmaps -->
         <article class="result-card">
           <h3>Attention Heatmaps</h3>
           <p class="result-text">
-            Representative head-layer heatmaps for visual and audio tokens. These illustrate where
+            Representative last layer heatmaps for visual, audio and text tokens. These illustrate where
             the model actually attends when different modalities are emphasized or misaligned.
           </p>
           <div class="results-figure">
@@ -870,7 +872,7 @@
           <!-- Numeric summary bars -->
           <div class="attn-bars">
             <div class="attn-bar">
-              <div class="attn-bar-label">Before tuning (video tokens, misaligned)</div>
+              <div class="attn-bar-label">Maximum Cohen's-D before tuning - 0.6</div>
 
               <div class="attn-bar-axis">
                 <span class="attn-axis-left">0</span>
@@ -884,7 +886,7 @@
             </div>
 
             <div class="attn-bar">
-              <div class="attn-bar-label">After tuning (video tokens, misaligned)</div>
+              <div class="attn-bar-label">Maximum Cohen's-D after tuning - 1.6</div>
 
               <div class="attn-bar-axis">
                 <span class="attn-axis-left">0</span>
@@ -910,56 +912,43 @@
       </div>
     </section>
 
-
     <!-- DEMO GALLERY -->
-    <section id="demos" class="section section-alt">
+    <section id="demos" class="section">
       <div class="section-header">
         <h2>Qualitative Demo Gallery</h2>
         <p>
-          Short clips showcasing typical MMA-Bench scenarios and model behaviour. Duplicate the demo
-          cards to add more qualitative examples as new results become available.
+          Semantic AV misalignment examples where our tuned model
+          <strong>demonstrates robust grounding in the requested sensory input</strong>.
+          Each clip is shown once; the rows below compare the baseline Qwen2.5-Omni-7B
+          prediction to our alignment-aware tuned model.
         </p>
       </div>
 
-      <div class="demo-grid">
-        <!-- Demo 1 -->
-        <article class="demo-card">
-          <h3>Semantic AV Misalignment</h3>
-          <p class="demo-desc">
-            Video and audio describe different events; we compare baseline vs alignment-aware tuning.
-          </p>
-          <div class="demo-video-wrapper">
-            <video controls preload="metadata" poster="assets/img/hero.png">
-              <source src="assets/video/demo_semantic_av.mp4" type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
+      <div class="demo-shell">
+        <div class="demo-shell-header">
+          <div>
+            <p class="demo-shell-title">Semantic Misalignment Examples</p>
+            <p class="demo-shell-sub">
+              Toggle between <strong>audio-prompt</strong> and
+              <strong>visual-prompt</strong> questions. Text-prompt demos coming soon.
+            </p>
           </div>
-        </article>
+          <div class="toggle-group demo-toggle-group">
+            <button class="toggle-btn active" data-demo-split="audio">
+              Audio-prompt
+            </button>
+            <button class="toggle-btn" data-demo-split="visual">
+              Visual-prompt
+            </button>
+            <button class="toggle-btn" disabled title="Coming soon">
+              Text-prompt (WIP)
+            </button>
+          </div>
+        </div>
 
-        <!-- Demo 2 -->
-        <article class="demo-card">
-          <h3>Misleading Caption vs Grounded Audio</h3>
-          <p class="demo-desc">
-            A wrong textual caption competes with correct audio-visual cues.
-          </p>
-          <div class="demo-video-wrapper">
-            <video controls preload="metadata" poster="assets/img/hero.png">
-              <source src="assets/video/demo_misleading_text.mp4" type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
-          </div>
-        </article>
-
-        <!-- Demo 3 -->
-        <article class="demo-card">
-          <h3>Long-Context Robustness</h3>
-          <p class="demo-desc">
-            Model behaviour under long irrelevant text context; clip can be added later.
-          </p>
-          <div class="demo-video-placeholder">
-            <span>Demo coming soon</span>
-          </div>
-        </article>
+        <div id="demo-gallery" class="demo-gallery-grid">
+          <!-- cards are injected from JS -->
+        </div>
       </div>
     </section>
 
