@@ -23,11 +23,12 @@
       <a href="#mma-bench">Benchmark</a>
       <a href="#dataset-pipeline">Dataset</a>
       <a href="#results">Results</a>
+      <a href="#blackbox">Black-Box</a>
       <a href="#whitebox">White-Box</a>
       <a href="#alignment">Alignment</a>
       <a href="#demos">Demos</a>
       <a href="#resources">Resources</a>
-      <span class="nav-pill">Work in Progress</span>
+      <!-- <span class="nav-pill">Work in Progress</span> -->
     </nav>
   </header>
 
@@ -37,7 +38,7 @@
       <div class="hero-text">
         <div class="pill">
           <span class="pill-dot" aria-hidden="true"></span>
-          <span>Project Page · WIP</span>
+          <span>MMA-Bench · Project Page</span>
         </div>
 
         <h1>
@@ -73,7 +74,9 @@
         </div>
 
         <div class="hero-buttons">
-          <button class="btn" disabled>Paper<span class="badge">Soon</span></button>
+          <a href="https://arxiv.org/abs/2511.22826" target="_blank" class="btn-link">
+            <button class="btn">Paper<span class="badge">Pre-print</span></button>
+          </a>
           <button class="btn" disabled>Code<span class="badge">Soon</span></button>
           <button class="btn" disabled>Data<span class="badge">Soon</span></button>
           <button class="btn" disabled>MMA-Bench<span class="badge">Soon</span></button>
@@ -492,7 +495,7 @@
     </section>
 
     <!-- BLACK-BOX MODEL COMPARISON -->
-    <section class="section section-alt">
+    <section id="blackbox" class="section section-alt">
       <div class="section-header">
         <h2>Black-Box Diagnostics Across Models</h2>
         <p>
@@ -820,7 +823,21 @@
               </p>
             </div>
 
-            <!-- Item 2: dataset size -->
+            <!-- Item 2: paired AVQA prompts -->
+            <div class="sample-item">
+              <div class="sample-header">
+                <div class="sample-icon">❓</div>
+                <div class="sample-title">Paired AVQA prompts</div>
+              </div>
+              <p class="sample-body">
+                For every clip we create two short QA pairs: one <strong>visual-focused</strong> question about
+                what is seen, and one <strong>audio-focused</strong> question about what is heard. The same
+                video is reused, but each prompt explicitly asks the model to ground its answer in a single
+                modality.
+              </p>
+            </div>
+
+            <!-- Item 3: dataset size -->
             <div class="sample-item">
               <div class="sample-header">
                 <div class="sample-icon">📊</div>
@@ -884,7 +901,7 @@
           </div>
 
           <p class="result-text">
-            The jump in Cohen's-D magnitudes after alignment shows that alignment-aware tuning changes
+            The jump in Cohen's-D magnitudes after training shows that alignment-aware tuning changes
             internal attention behaviour: the model reallocates substantially more attention
             toward the queried modality instead of keeping mixed, low-contrast patterns.
           </p>
@@ -959,15 +976,16 @@
 
       <div class="resources-grid">
         <div class="card">
-          <h3>BibTeX (placeholder)</h3>
+          <h3>BibTeX</h3>
           <pre class="bibtex">
-@inproceedings{mma_bench_2026,
-  title     = {Some Modalities are More Equal Than Others:
-               Decoding and Architecting Multimodal Integration in MLLMs},
-  author    = {To be updated},
-  booktitle = {Proceedings of the IEEE/CVF Conference on
-               Computer Vision and Pattern Recognition (CVPR)},
-  year      = {2026}
+@misc{chen2025modalitiesequalothersdecoding,
+      title={Some Modalities are More Equal Than Others: Decoding and Architecting Multimodal Integration in MLLMs}, 
+      author={Tianle Chen and Chaitanya Chakka and Arjun Reddy Akula and Xavier Thomas and Deepti Ghadiyaram},
+      year={2025},
+      eprint={2511.22826},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2511.22826}, 
 }
 </pre>
         </div>
@@ -975,7 +993,7 @@
           <h3>Contact</h3>
           <p>
             Project lead &amp; contact information will be added after the review process. For now,
-            please refer to the paper’s corresponding author once de-anonymized.
+            please refer to the paper's corresponding author once de-anonymized.
           </p>
         </div>
       </div>
@@ -983,7 +1001,7 @@
   </main>
 
   <footer class="site-footer">
-    <p>MMA-Bench · Multimodal Alignment Benchmark · Project page (Work in Progress)</p>
+    <p>MMA-Bench · Multimodal Alignment Benchmark · Project page</p>
   </footer>
 
   <script src="assets/js/main.js"></script>
