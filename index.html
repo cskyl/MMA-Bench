@@ -736,54 +736,164 @@
     </section>
 
     <!-- ALIGNMENT-AWARE TUNING -->
-    <section id="alignment" class="section section-alt">
+    <section id="alignment" class="section section-alt alignment-section">
       <div class="section-header">
         <h2>Alignment-Aware Tuning</h2>
         <p>
-          We fine-tune Qwen2.5-Omni with supervision that explicitly tells the model which modality
-          each question should use, while still providing all modalities as input.
+          We further tune Qwen2.5-Omni on modality-targeted AVQA pairs built from the
+          two-stage curated MMA-Bench pipeline. This section summarizes the training samples,
+          preprocessing, and how tuning changes the model’s internal attention behaviour.
         </p>
       </div>
 
-      <div class="section-grid">
-        <article class="card">
-          <h3>Training Signal</h3>
-          <p>
-            Visual- and audio-focused QA over aligned and misaligned clips: the model must answer
-            correctly using the prompted modality, not shortcuts like “always trust text” or “always
-            trust vision”.
+      <article class="card alignment-pipeline-card">
+        <h3>Training Pipeline Overview</h3>
+        <div class="alignment-pipeline">
+          <div class="pipe-step">
+            <div class="pipe-icon-badge">🎞️</div>
+            <div class="pipe-label">
+              Filtered training data
+            </div>
+            <!-- <div class="pipe-sub">
+              (no LLM filtering or manual inspection)
+            </div> -->
+          </div>
+          <div class="pipe-arrow">➜</div>
+          <div class="pipe-step">
+            <div class="pipe-icon-badge">🧩</div>
+            <div class="pipe-label">
+              Process videos into<br />
+              8&nbsp;FPS, 504x504 frames
+            </div>
+          </div>
+          <div class="pipe-arrow">➜</div>
+          <div class="pipe-step">
+            <div class="pipe-icon-badge">❓</div>
+            <div class="pipe-label">
+              Dual AVQA pairs<br />
+              (video- &amp; audio-focused)
+            </div>
+          </div>
+          <!-- <div class="pipe-arrow">➜</div>
+          <div class="pipe-step">
+            <div class="pipe-icon-badge">🏷️</div>
+            <div class="pipe-label">
+              Modality tags<br />
+              [VIDEO] / [AUDIO]
+            </div>
+          </div> -->
+          <div class="pipe-arrow">➜</div>
+          <div class="pipe-step">
+            <div class="pipe-icon-badge">⚙️</div>
+            <div class="pipe-label">
+              LoRA SFT on W<sub>Q</sub>, W<sub>V</sub><br />
+              (backbone frozen)
+            </div>
+          </div>
+        </div>
+        <p class="alignment-pipeline-caption">
+          We start from the <strong>AudioSet training split</strong>, pass it through the same
+          two-stage ontology-based curation used for MMA-Bench (while skipping the LLM
+          filtering and manual inspection stages), then construct paired visual- and
+          audio-focused questions and fine-tune with lightweight LoRA adapters.
+        </p>
+      </article>
+
+
+      <!-- Lower grid: sample format + training / attention -->
+      <div class="alignment-grid">
+        <!-- Left: what a training sample looks like -->
+        <article class="card alignment-sample-card">
+          <h3>What a Training Sample Looks Like</h3>
+
+          <div class="alignment-sample-list">
+            <!-- Item 1: video processing -->
+            <div class="sample-item">
+              <div class="sample-header">
+                <div class="sample-icon">🎞️</div>
+                <div class="sample-title">Video preprocessing</div>
+              </div>
+              <p class="sample-body">
+                Each clip is rescaled and center-cropped to <strong>504×504</strong>, matching Qwen’s
+                TMRoPE patch grid. Frames are sampled at <strong>8&nbsp;FPS</strong> to form a compact
+                visual token sequence used in training.
+              </p>
+            </div>
+
+            <!-- Item 2: dataset size -->
+            <div class="sample-item">
+              <div class="sample-header">
+                <div class="sample-icon">📊</div>
+                <div class="sample-title">Training set size</div>
+              </div>
+              <p class="sample-body">
+                From the curated AudioSet train split, we obtain approximately
+                <strong>13k clips</strong> and <strong>≈26k</strong> modality-specified QA pairs, pairing
+                every clip with both a visual- and audio-focused question.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Right: fine-tuning + attention reallocation -->
+        <article class="card alignment-training-card">
+          <h3>Attention Reallocation Effect</h3>
+
+          <!-- <p class="result-text">
+            We visualize Cohen&rsquo;s&nbsp;D between attention on video tokens under visual vs.
+            audio prompts (misaligned case). Larger absolute values indicate stronger separation
+            between the two behaviours.
+          </p> -->
+
+          <!-- Single Cohen's D plot (Fig. 10c style) -->
+          <div class="attn-plot-single">
+            <img src="assets/img/post_training_vid_misaligned.png"
+              alt="Layer-wise Cohen's D for video tokens in the misaligned setting, before and after tuning" />
+          </div>
+
+          <!-- Numeric summary bars -->
+          <div class="attn-bars">
+            <div class="attn-bar">
+              <div class="attn-bar-label">Before tuning (video tokens, misaligned)</div>
+
+              <div class="attn-bar-axis">
+                <span class="attn-axis-left">0</span>
+
+                <div class="attn-bar-track">
+                  <div class="attn-bar-fill attn-before" style="width:30%;"></div>
+                </div>
+
+                <span class="attn-axis-right">2</span>
+              </div>
+            </div>
+
+            <div class="attn-bar">
+              <div class="attn-bar-label">After tuning (video tokens, misaligned)</div>
+
+              <div class="attn-bar-axis">
+                <span class="attn-axis-left">0</span>
+
+                <div class="attn-bar-track">
+                  <div class="attn-bar-fill attn-after" style="width:80%;"></div>
+                </div>
+
+                <span class="attn-axis-right">2</span>
+              </div>
+            </div>
+
+          </div>
+
+          <p class="result-text">
+            The jump in Cohen's-D magnitudes after alignment shows that alignment-aware tuning changes
+            internal attention behaviour: the model reallocates substantially more attention
+            toward the queried modality instead of keeping mixed, low-contrast patterns.
           </p>
         </article>
 
-        <article class="card">
-          <h3>Quantitative Gains</h3>
-          <p>
-            On semantic misalignment, alignment-aware tuning boosts accuracy on both visual and audio
-            prompts, and improves robustness to misleading captions and hallucination-oriented
-            benchmarks.
-          </p>
-        </article>
 
-        <article class="card interactive-card">
-          <h3>Attention Reallocation Explorer</h3>
-          <p>
-            Toggle to see how the interpretation changes conceptually before vs. after tuning.
-          </p>
-          <div class="toggle-group">
-            <button class="toggle-btn active" data-attn="before">Before Tuning</button>
-            <button class="toggle-btn" data-attn="after">After Tuning</button>
-          </div>
-          <div id="attn-description" class="scenario-description">
-            <h4>Before Tuning</h4>
-            <p>
-              Attention is dominated by text tokens with mild reweighting between audio and visual
-              streams when prompts change. Models often follow whichever modality is statistically
-              easiest instead of the one requested by the prompt.
-            </p>
-          </div>
-        </article>
       </div>
     </section>
+
 
     <!-- DEMO GALLERY -->
     <section id="demos" class="section section-alt">

@@ -1093,4 +1093,406 @@ h1 {
     flex-direction: column;
   }
 }
+/* Alignment-aware tuning section
+   ------------------------------------------ */
 
+.alignment-section {
+  /* inherits .section + .section-alt */
+}
+
+/* ── Training pipeline strip ───────────────── */
+
+.alignment-pipeline-card {
+  margin-bottom: 20px;
+  padding: 16px 18px 14px;
+}
+
+.alignment-pipeline {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.pipe-step {
+  flex: 1;
+  padding: 20px 22px;     /* more breathing room */
+  border-radius: 999px;
+  background: linear-gradient(135deg,
+    rgba(125,249,255,0.12),
+    rgba(125,249,255,0.04)
+  );
+  border: 1px solid rgba(8, 8, 8, 0.45);
+  box-shadow: 0 6px 20px rgba(15,23,42,0.12);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* keeps content vertically centered */
+  gap: 10px;               /* spacing between icon and text */
+  text-align: center;
+  min-height: 140px;
+}
+
+
+.pipe-icon-badge {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(125, 249, 255, 0.22);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;     /* was ~1.2rem */
+  line-height: 1;
+  box-shadow: 0 3px 10px rgba(125, 249, 255, 0.28);
+}
+
+
+.pipe-label {
+  font-size: 1rem;        /* was 0.82rem */
+  font-weight: 500;
+  line-height: 1.35;
+  color: var(--text-main);
+}
+
+
+.pipe-sub {
+  font-size: 0.74rem;
+  color: var(--text-soft);
+}
+
+.pipe-arrow {
+  align-self: center;
+  font-size: 0.9rem;
+  color: var(--text-soft);
+}
+
+.alignment-pipeline-caption {
+  margin-top: 10px;
+  font-size: 0.88rem;
+  color: var(--text-soft);
+  line-height: 1.55;
+}
+
+/* ── Lower grid layout (samples + training) ── */
+
+.alignment-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1.1fr);
+  gap: 16px;
+}
+
+/* Sample grid (left card) */
+
+
+
+.sample-block {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+
+.sample-label {
+  font-size: 0.78rem;
+  color: var(--text-soft);
+}
+
+/* Prompt cards */
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 2px 8px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.tag-video {
+  background: rgba(59, 130, 246, 0.14);
+  color: #1d4ed8;
+}
+
+.tag-audio {
+  background: rgba(16, 185, 129, 0.14);
+  color: #047857;
+}
+
+.prompt-text {
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.count-main {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--accent-dark);
+}
+
+.count-sub {
+  font-size: 0.8rem;
+  color: var(--text-soft);
+}
+
+/* Captions */
+
+.sample-caption {
+  font-size: 0.86rem;
+  color: var(--text-soft);
+  line-height: 1.5;
+}
+
+/* Training + attention card (right) */
+
+.alignment-training-card h4 {
+  font-size: 0.9rem;
+  margin-bottom: 4px;
+}
+
+.training-loop {
+  margin-bottom: 10px;
+}
+
+/* Attention reallocator mini-bars */
+
+.attention-reallocator {
+  margin-top: 6px;
+}
+
+
+.attn-small {
+  width: 30%;
+}
+
+.attn-large {
+  width: 80%;
+}
+
+.attn-bar-note {
+  font-size: 0.8rem;
+  color: var(--text-soft);
+  margin-top: 2px;
+}
+
+/* ── Responsive tweaks ─────────────────────── */
+
+@media (max-width: 960px) {
+  .alignment-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .alignment-pipeline {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .pipe-step {
+    flex: 1 1 100%;
+    border-radius: 14px;
+  }
+
+  .pipe-arrow {
+    display: none;
+  }
+}
+
+/* Left card: simple vertical list */
+
+.alignment-sample-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.sample-item {
+  border-radius: 12px;
+  border: 1px solid var(--border-subtle);
+  background: #ffffff;
+  padding: 10px 12px;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+}
+
+.sample-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.sample-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  background: rgba(125, 249, 255, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+}
+
+.sample-title {
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+
+.sample-body {
+  font-size: 0.86rem;
+  color: var(--text-soft);
+  line-height: 1.5;
+}
+
+/* Right card: attention plots */
+
+.attn-plots {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.attn-plot img {
+  width: 100%;
+  display: block;
+  border-radius: 10px;
+  border: 1px solid rgba(148, 163, 184, 0.7);
+  background: #020617;
+}
+
+.attn-plot-caption {
+  margin-top: 4px;
+  font-size: 0.82rem;
+  color: var(--text-soft);
+  line-height: 1.4;
+}
+
+.attn-stats {
+  margin-top: 2px;
+  font-size: 0.8rem;
+  color: var(--text-soft);
+}
+
+/* Responsive: stack plots on narrow screens */
+
+@media (max-width: 960px) {
+  .attn-plots {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Single Cohen's D plot */
+
+.attn-plot-single {
+  margin-top: 10px;
+}
+
+.attn-plot-single img {
+  width: 100%;
+  display: block;
+  border-radius: 10px;
+  border: 1px solid rgba(148, 163, 184, 0.7);
+  background: #020617;
+}
+
+/* Numeric summary bars */
+
+.attn-bars {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.attn-bar-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-soft);
+  margin-bottom: 2px;
+}
+
+.attn-bar-track {
+  position: relative;
+  width: 100%;
+  height: 10px;
+  border-radius: 999px;
+  background: #e5e9f0;
+  overflow: hidden;
+}
+
+.attn-bar-fill {
+  height: 100%;
+  border-radius: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 6px;
+  font-size: 0.75rem;
+  color: #0f172a;
+  white-space: nowrap;
+}
+
+/* Match legend colors from the plot as closely as you like */
+.attn-before {
+  width: 30%; /* proportional to max |D| before tuning */
+  background: #ff1010;  /* e.g., soft indigo */
+}
+
+.attn-after {
+  width: 80%; /* proportional to max |D| after tuning */
+  background: rgba(129, 140, 248, 0.9);  /* e.g., soft green */
+}
+
+/* Bar container with 0 —— track —— 2 layout */
+.attn-bar-axis {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.attn-axis-left,
+.attn-axis-right {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-soft);
+}
+
+/* Track */
+.attn-bar-track {
+  width: 100%;
+  height: 10px;
+  border-radius: 999px;
+  background: #e5e9f0;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Fill colored according to legend */
+.attn-bar-fill {
+  height: 100%;
+  border-radius: inherit;
+}
+
+/* Example colors — replace to match your Fig.10 legend */
+.attn-before {
+  background: rgba(240, 44, 44, 0.85);   /* dashed red curve color */
+}
+
+.attn-after {
+  background: rgba(99, 102, 241, 0.85);  /* solid blue curve color */
+}
+
+/* Label above */
+.attn-bar-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-main);
+  margin-bottom: 4px;
+}
