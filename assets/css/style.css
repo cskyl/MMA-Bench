@@ -1668,3 +1668,41 @@ h1 {
   color: #166534;
 }
 
+/* Acknowledgment block */
+.authors-ack {
+  background: #ffffff;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.authors-ack-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px 16px 24px;
+  text-align: center;
+}
+
+/* Soft glowing pill-style badge */
+.authors-ack-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  margin-bottom: 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background: var(--accent-soft);
+  color: var(--accent-dark);
+  border: 1px solid rgba(125,249,255,0.45);
+  box-shadow: 0 0 10px rgba(125,249,255,0.18);
+}
+
+/* Main acknowledgment text */
+.authors-ack-text {
+  font-size: 0.88rem;
+  color: var(--text-soft);
+  line-height: 1.55;
+  max-width: 42rem;
+  margin: 0 auto;
+}
+
