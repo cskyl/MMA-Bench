@@ -38,7 +38,7 @@ const SCENARIOS = {
       "We append long random text after the query while leaving the audio-video semantically intact. " +
       "This probes long-context robustness: can the model retain correct grounding?",
     video: "assets/video/long_context.mp4",
-    question: "Which class best describes the visual/audio content of this video? Options: [List of classes]. Answer using a single class name. t n g u l m n t z f (5000 random letters)...",
+    question: "Which class best describes the visual/audio content of this video? Options: [List of classes]. Answer using a single class name. t n g u l m n t z f (10,000 random letters)...",
     audioAnswer: "Explosion",
     videoAnswer: "Explosion"
   },
@@ -71,9 +71,7 @@ const RESULTS_MODELS = {
   "qwen-tuned": {
     title: "Qwen2.5-Omni (alignment-aware tuned)",
     text:
-      "Our tuned model maintains high accuracy under aligned conditions and shows the " +
-      "smallest degradation under semantic AV conflicts and misleading text, indicating " +
-      "better modality selectivity and grounding.",
+      "Our alignment-aware tuning substantially boosts audio robustness and misalignment performance, yielding the smallest drops under AV conflict, misleading captions, and long context.",
     plots: {
       unimodal: "assets/img/results_qwen_tuned_unimodal.png",
       semantic: "assets/img/results_qwen_tuned_semantic.png",
@@ -84,7 +82,7 @@ const RESULTS_MODELS = {
   "qwen-base": {
     title: "Qwen2.5-Omni",
     text:
-      "Uses both video and audio cues - ablating either hurts aligned accuracy - but under semantic AV conflicts and long context its audio answers collapse while visual ones stay strong, revealing a vision- and text-leaning model that struggles to follow the requested modality.",
+      "Competitive on aligned clips but skewed toward vision and text: audio-prompt accuracy collapses under AV misalignment and textual perturbations, while visual prompts remain relatively stable.",
     plots: {
       unimodal: "assets/img/unimodal_qwen.png",
       semantic: "assets/img/semantic_misalign_qwen.png",
@@ -95,7 +93,7 @@ const RESULTS_MODELS = {
   "videollama": {
     title: "VideoLLaMA2",
     text:
-      "Shows similar cross-modal use of both streams, with clear drops when either audio or video is removed, and modest resilience to misleading captions; however, it still loses a lot of accuracy when audio and video disagree or when prompts are buried in long context.",
+      "Exhibits brittle multimodal integration: both audio and video ablations hurt, and AV conflicts or long context induce sizable drops, despite moderately balanced use of the two streams.",
     plots: {
       unimodal: "assets/img/unimodal_vl2.png",
       semantic: "assets/img/semantic_misalign_vl2.png",
@@ -106,7 +104,7 @@ const RESULTS_MODELS = {
   "gemini_2-0_fl": {
     title: "Gemini-2.0-Flash-Lite",
     text:
-      "Very strong on aligned visual questions but barely changes when audio is muted or corrupted, and its audio-prompt accuracy collapses under AV conflict and misleading text - effectively “seeing without listening” and heavily over-trusting captions.",
+      "Very strong on aligned visual prompts but effectively “sees without listening”: audio-prompt accuracy collapses under AV misalignment, ablations, and misleading captions, revealing heavy text/vision bias.",
     plots: {
       unimodal: "assets/img/unimodal_gemini_2_0_flash_lite.png",
       semantic: "assets/img/semantic_misalign_gemini_2_0_flash_lite.png",
@@ -117,7 +115,7 @@ const RESULTS_MODELS = {
   "pandagpt": {
     title: "PandaGPT",
     text:
-      "Overall weakest black-box performance: it already lags on aligned data, is highly sensitive to modality conflicts and misleading captions, and is further limited by a short context window, highlighting challenges in robust multimodal grounding.",
+      "Lowest overall accuracy in our study: it struggles even on aligned data and is highly sensitive to AV conflicts, textual perturbations, and context length, indicating weak multimodal grounding.",
     plots: {
       unimodal: "assets/img/unimodal_pandagpt.png",
       semantic: "assets/img/semantic_misalign_pandagpt.png",
@@ -128,7 +126,7 @@ const RESULTS_MODELS = {
   "chatbridge": {
     title: "ChatBridge",
     text:
-      "Performs competitively on aligned clips, but behaves in a strongly text-biased way: misleading captions or text-prompt conflicts cause large drops, especially for audio questions, showing that it often trusts the language channel over the actual AV evidence.",
+      "Reasonable aligned performance but strongly text-biased: misleading captions and text–prompt conflicts induce large drops, especially for audio questions, showing over-reliance on language.",
     plots: {
       unimodal: "assets/img/unimodal_Chatbridge.png",
       semantic: "assets/img/semantic_misalign_Chatbridge.png",
@@ -139,7 +137,7 @@ const RESULTS_MODELS = {
   "qwen3": {
     title: "Qwen3-Omni-30B-Instruct",
     text:
-      "Matches Gemini-2.5-Pro on many aligned metrics, yet exhibits steeper declines under AV conflicts and long-context tails, indicating good raw capability but less stable integration of modalities and weaker resistance to off-topic or conflicting cues.",
+      "Matches top models on aligned MMA-Bench but sees sharper degradation under AV misalignment and long-context stress, pointing to less stable modality integration despite strong capacity.",
     plots: {
       unimodal: "assets/img/unimodal_Qwen3-Omni-30B-Instruct.png",
       semantic: "assets/img/semantic_misalign_Qwen3-Omni-30B-Instruct.png",
@@ -150,7 +148,7 @@ const RESULTS_MODELS = {
   "gemini_2_0_f": {
     title: "Gemini-2.0-Flash",
     text:
-      "High aligned accuracy with strong visual understanding, but under semantic misalignment and misleading captions its audio responses degrade sharply, revealing a tendency to over-weight visual and textual hints relative to the intended audio cue.",
+      "High overall accuracy with strong visual understanding, but under AV conflict and misleading captions its audio-prompt performance drops sharply, again revealing a visual/text preference.",
     plots: {
       unimodal: "assets/img/unimodal_gemini-2.0-Flash.png",
       semantic: "assets/img/semantic_misalign_gemini-2.0-Flash.png",
@@ -161,7 +159,7 @@ const RESULTS_MODELS = {
   "gemini_2_5_p": {
     title: "Gemini-2.5-Pro",
     text:
-      "Best overall black-box robustness: retains strong performance under unimodal ablations, AV conflicts, misleading captions, and long contexts, though even here audio prompts remain the weakest link, reflecting a residual visual/text preference in extreme cases.",
+      "Strongest closed-source baseline: remains robust across ablations, AV conflicts, misleading captions, and long context, though audio prompts are still the weakest mode in the hardest settings.",
     plots: {
       unimodal: "assets/img/unimodal_gemini-2.5-pro.png",
       semantic: "assets/img/semantic_misalign_gemini-2.5-pro.png",
@@ -176,7 +174,7 @@ const WHITEBOX_MODELS = {
   qwen: {
     title: "Qwen2.5-Omni: Modality Selectivity",
     text:
-      "Shows strong text-token dominance across layers, with early and mid-layers allocating most attention mass to language tokens even when the question is purely audio/video. Under misalignment, its prompt-driven attention shift is fairly good, yielding good Cohen's-D separation between AV prompts and explaining its black-box performance on audio-focused questions.",
+      "Exhibits strong text-token dominance but clear prompt-driven shifts between video and audio tokens in deeper layers, with large |D| under misalignment that align with its improved audio robustness.",
     cohenVideoImg: "assets/img/cohensD_video_tokens_qwen.png",
     cohenAudioImg: "assets/img/cohensD_audio_tokens_qwen.png",
     heatmapImg: "assets/img/heatmap_qwen.png"
@@ -184,7 +182,7 @@ const WHITEBOX_MODELS = {
   videollama: {
     title: "VideoLLaMA2: Vision-Centric Attention",
     text:
-      "Attention patterns indicate a moderately balanced AV integration, with both modalities receiving meaningful mass in mid/late layers. Yet, under misalignment, the shift between video- and audio-prompt attention is small, producing flat Cohen's-D curves. This reveals limited ability to re-route attention when cues disagree, consistent with its black-box misalignment trend.",
+      "Allocates attention more uniformly and vision-centrically, producing flatter Cohen’s-D curves and weaker reallocation between prompts, consistent with its limited gains under AV conflicts.",
     cohenVideoImg: "assets/img/cohensD_video_tokens_vl2.png",
     cohenAudioImg: "assets/img/cohensD_audio_tokens_vl2.png",
     heatmapImg: "assets/img/heatmap_vl2.png"
@@ -366,6 +364,58 @@ document.addEventListener("DOMContentLoaded", () => {
     // initial view
     renderDemoGallery("audio");
   }
+
+  // Contact: copy email to clipboard
+(function initContactCopyButtons() {
+  const copyButtons = document.querySelectorAll(".contact-copy");
+  if (!copyButtons.length) return;
+
+  copyButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const email = btn.dataset.email;
+      if (!email) return;
+
+      const doFeedback = () => {
+        btn.classList.add("copied");
+        const labelEl = btn.querySelector(".contact-copy-label");
+        if (!labelEl) return;
+
+        const prevText = labelEl.textContent;
+        labelEl.textContent = "Copied";
+        setTimeout(() => {
+          btn.classList.remove("copied");
+          labelEl.textContent = prevText;
+        }, 1200);
+      };
+
+      const fallbackCopy = () => {
+        const textarea = document.createElement("textarea");
+        textarea.value = email;
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
+        document.body.appendChild(textarea);
+        textarea.select();
+        try {
+          document.execCommand("copy");
+        } catch (e) {
+          console.warn("Copy failed", e);
+        }
+        document.body.removeChild(textarea);
+        doFeedback();
+      };
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard
+          .writeText(email)
+          .then(doFeedback)
+          .catch(() => fallbackCopy());
+      } else {
+        fallbackCopy();
+      }
+    });
+  });
+})();
+
 });
 
 /* ---------- Scenario Explorer ---------- */
@@ -659,8 +709,8 @@ function renderDemoGallery(split) {
     .map((ex) => {
       const promptBadge =
         ex.promptType === "audio"
-          ? `<span class="demo-prompt-badge demo-prompt-audio">🔊 AUDIO prompt</span>`
-          : `<span class="demo-prompt-badge demo-prompt-visual">🎬 VISUAL prompt</span>`;
+          ? `<span class="demo-prompt-badge demo-prompt-audio">🔊 AUDIO-focused question</span>`
+          : `<span class="demo-prompt-badge demo-prompt-visual">🎬 VISUAL-focused prompt</span>`;
 
       return `
       <article class="demo-example-card">

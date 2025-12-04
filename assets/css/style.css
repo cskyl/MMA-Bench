@@ -146,7 +146,7 @@ body {
 }
 
 .hero-image-frame {
-  max-width: 480px;
+  max-width: 550px;
   width: 100%;
   border-radius: 22px;
   overflow: hidden;
@@ -308,6 +308,26 @@ h1 {
 .authors-placeholder {
   color: var(--text-soft);
 }
+
+/* Author email styling */
+.authors-emails a {
+  color: var(--text-soft);
+  text-decoration: none;
+  font-size: 0.85rem;
+  padding: 2px 4px;
+  border-radius: 6px;
+  transition:
+    color 0.15s ease,
+    background 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.authors-emails a:hover {
+  color: var(--accent-dark);
+  background: var(--accent-soft);
+  box-shadow: 0 0 8px rgba(125, 249, 255, 0.35);
+}
+
 
 /* =========================================================
    Section + layout grid + cards
@@ -941,6 +961,25 @@ h1 {
   display: block;
 }
 
+/* --- Accordion: larger, more impactful text --- */
+
+.accordion-item {
+  font-size: 1.05rem;           /* increased from 0.9rem */
+  font-weight: 600;             /* makes headers punchier */
+  padding: 12px 14px;           /* slightly more breathing room */
+}
+
+.accordion-icon {
+  font-size: 1.2rem;            /* larger + more prominent */
+}
+
+.accordion-panel {
+  font-size: 0.98rem;           /* increased from ~0.88rem */
+  line-height: 1.55;
+  padding: 10px 12px 14px;      /* slightly increased spacing */
+}
+
+
 /* =========================================================
    Alignment-aware tuning section
    ========================================================= */
@@ -1500,3 +1539,132 @@ h1 {
     padding: 28px 14px;
   }
 }
+
+/* Contact Card Styling */
+
+/* Contact card with avatars + copy buttons */
+
+.contact-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 0.9rem;
+}
+
+.contact-intro {
+  font-size: 0.85rem;
+  color: var(--text-soft);
+  margin-bottom: 2px;
+}
+
+.contact-entry {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 6px 8px;
+  border-radius: 10px;
+  background: #f8fafc;
+  border: 1px solid var(--border-subtle);
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
+}
+
+.contact-entry:hover {
+  border-color: rgba(125, 249, 255, 0.6);
+  box-shadow: 0 6px 14px rgba(15, 23, 42, 0.08);
+  transform: translateY(-1px);
+}
+
+.contact-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.contact-avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 30% 30%, #ffffff, var(--accent));
+  box-shadow: 0 0 10px rgba(125, 249, 255, 0.6);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--accent-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.contact-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.contact-name {
+  font-weight: 600;
+  color: var(--text-main);
+  font-size: 0.88rem;
+}
+
+.contact-email {
+  font-size: 0.85rem;
+  color: var(--text-soft);
+  text-decoration: none;
+  padding: 1px 4px;
+  border-radius: 6px;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.contact-email:hover {
+  color: var(--accent-dark);
+  background: var(--accent-soft);
+}
+
+/* Copy button */
+
+.contact-copy {
+  border: 1px solid rgba(148, 163, 184, 0.7);
+  background: #ffffff;
+  border-radius: 999px;
+  padding: 4px 8px;
+  font-size: 0.78rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  color: var(--text-soft);
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.12s ease,
+    color 0.15s ease;
+}
+
+.contact-copy-icon {
+  font-size: 0.82rem;
+}
+
+.contact-copy:hover {
+  border-color: rgba(125, 249, 255, 0.9);
+  background: var(--accent-soft);
+  box-shadow: 0 0 10px rgba(125, 249, 255, 0.3);
+  color: var(--accent-dark);
+  transform: translateY(-1px);
+}
+
+/* Visual feedback when copied */
+
+.contact-copy.copied {
+  background: #dcfce7;
+  border-color: #22c55e;
+  box-shadow: 0 0 10px rgba(34, 197, 94, 0.4);
+  color: #166534;
+}
+

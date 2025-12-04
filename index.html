@@ -44,9 +44,9 @@
           Some <span class="highlight">Modalities</span> are More Equal Than Others
         </h1>
 
-        <p class="hero-subtitle">
+        <!-- <p class="hero-subtitle">
           Decoding and architecting <strong>multimodal integration</strong> in MLLMs.
-        </p>
+        </p> -->
 
         <p class="hero-summary">
           <strong>Multimodal LLMs often fail the moment their sensory inputs disagree.</strong>
@@ -58,7 +58,8 @@
           attention behaviour, and introduce a lightweight alignment-aware tuning method that restores proper modality
           grounding.
           <br />
-          Our key finding: <strong>MLLMs do not naturally know when to trust sight, sound, or text — but with targeted
+          Our key finding: <strong>MLLMs do not naturally know when to trust sight, sound, or text when they present
+            conflicting information - but with targeted
             supervision, they can learn.</strong>
         </p>
 
@@ -95,20 +96,39 @@
     </div>
   </section>
 
-  <!-- AUTHORS PLACEHOLDER -->
+  <!-- Authors strip -->
   <section class="authors">
     <div class="authors-inner">
-      <p class="authors-title">Authors</p>
-      <p class="authors-list">
-        <span class="authors-placeholder">
-          To be updated after camera-ready (currently anonymized for review).
-        </span>
-      </p>
-      <p class="authors-affiliation">
-        <span>Affiliations · Institution(s) Here</span>
-      </p>
+      <div class="authors-title">Authors</div>
+
+      <div class="authors-list">
+        Tianle Chen<sup>1,*</sup>,
+        Chaitanya Chakka<sup>1,*</sup>,
+        Arjun Reddy Akula<sup>2</sup>,
+        Xavier Thomas<sup>1</sup>,
+        Deepti Ghadiyaram<sup>1</sup>
+      </div>
+
+      <div class="authors-affiliation">
+        <sup>1</sup> Boston University &nbsp;&nbsp;
+        <sup>2</sup> Google DeepMind
+      </div>
+
+      <div class="authors-affiliation authors-emails">
+        <a href="mailto:tianle@bu.edu">tianle@bu.edu</a>,
+        <a href="mailto:chvskch@bu.edu">chvskch@bu.edu</a>,
+        <a href="mailto:arjunakula@google.com">arjunakula@google.com</a>,
+        <a href="mailto:xthomas@bu.edu">xthomas@bu.edu</a>,
+        <a href="mailto:dghadiya@bu.edu">dghadiya@bu.edu</a>
+      </div>
+
+
+      <div class="authors-affiliation">
+        * Equal contribution
+      </div>
     </div>
   </section>
+
 
   <!-- MAIN CONTENT -->
   <main class="page-main">
@@ -144,7 +164,7 @@
             <!-- Left: video -->
             <div class="scenario-player">
               <div class="scenario-video-frame">
-                <video id="scenario-video" controls preload="metadata" poster="assets/img/hero.png">
+                <video id="scenario-video" controls preload="metadata">
                   <source id="scenario-video-source" src="assets/video/scenario_aligned.mp4" type="video/mp4" />
                   Your browser does not support the video tag.
                 </video>
@@ -187,12 +207,12 @@
     <section id="dataset-pipeline" class="section section-alt">
       <div class="section-header">
         <h2>Dataset Curation Pipeline</h2>
-        <p>
+        <!-- <p>
           MMA-Bench is built in two stages. First, we apply ontology-driven filtering to clean
           the AudioSet label space. Second, we run an LLM-based audio-video consistency filter
           to keep clips with clear, single-source events and then perform futher manual inspection before constructing
           misaligned pairs.
-        </p>
+        </p> -->
       </div>
 
       <div class="results-grid results-grid-two">
@@ -201,7 +221,7 @@
           <p class="result-text">
             We simplify the AudioSet ontology by absorbing overly fine-grained leaves, removing
             ambiguous, abstract, and restricted nodes, and keeping only visually-grounded,
-            action-bearing classes. This produces a compact ontology well-suited for AVQA.
+            action-bearing classes. This produces a compact ontology well-suited for the task.
           </p>
           <div class="results-figure">
             <img src="assets/img/dataset_pipeline_ontology_step1.png"
@@ -210,7 +230,7 @@
         </article>
 
         <article class="result-card">
-          <h3>Step 2 — LLM-Based AV Consistency Filter</h3>
+          <h3>Step 2 — MLLM-Based AV Consistency Filter</h3>
           <p class="result-text">
             For each candidate clip, a multimodal LLM judge answers four consistency queries
             (visual-only, audio-only, and cross-modal) to verify that the same object is both
@@ -503,9 +523,9 @@
       <div class="section-header">
         <h2>Black-Box Diagnostics Across Models</h2>
         <p>
-          Different MLLMs exhibit distinct failure patterns across our MMA-Bench stress tests.
           Use the model selector to inspect how each model behaves under unimodal ablations,
-          semantic AV conflicts, misleading captions, and long-context perturbations.
+          semantic AV conflicts, misleading captions, and long-context perturbations. Check out the paper for more
+          in-depth findings!
         </p>
       </div>
 
@@ -513,9 +533,9 @@
         <!-- Left: selector + hint -->
         <article class="card interactive-card results-model-left">
           <h3>Model Comparison Explorer</h3>
-          <p class="result-text">
+          <!-- <p class="result-text">
             Select a model to view its robustness profile across the four black-box stress tests.
-          </p>
+          </p> -->
           <div class="results-model-buttons">
             <!-- <button class="results-model-btn active" data-model="qwen-tuned">
               Qwen2.5-Omni (ours tuned)
@@ -546,11 +566,11 @@
             </button>
           </div>
 
-          <p class="results-model-hint">
+          <!-- <p class="results-model-hint">
             Each profile shows four views: <strong>Unimodal Ablations</strong>,
             <strong>Semantic Misalignment</strong>, <strong>Misleading Captions</strong>,
             and <strong>Long Context</strong>.
-          </p>
+          </p> -->
         </article>
 
         <!-- Right: per-model description + 4 small plots -->
@@ -604,18 +624,16 @@
       <div class="section-header">
         <h2>White-Box Attention Diagnostics</h2>
         <p>
-          We inspect layer-wise attention to quantify modality dominance and later how
-          alignment-aware tuning redistributes attention toward the queried modality. This section
-          mirrors the white-box figures in the main paper and supplementary.
-        </p>
+          Use the model selector to to see their respective attention statistics and heatmaps. Check out the
+          paper for more details!
       </div>
 
       <!-- Model selector for white-box (Qwen vs VideoLLaMA) -->
       <article class="card interactive-card whitebox-card">
         <h3>Choose Model for White-Box View</h3>
-        <p>
-          Toggle between Qwen2.5-Omni and VideoLLaMA2 to see their respective attention statistics and heatmaps.
-        </p>
+        <!-- <p>
+          Toggle between Qwen2.5-Omni and VideoLLaMA2 
+        </p> -->
         <div class="whitebox-model-buttons">
           <button class="whitebox-model-btn active" data-wmodel="qwen">Qwen2.5-Omni</button>
           <button class="whitebox-model-btn" data-wmodel="videollama">VideoLLaMA2</button>
@@ -639,7 +657,8 @@
             <!-- LEFT: text -->
             <div class="cohen-explainer">
               <p class="result-text">
-                Cohen's&nbsp;D measures how far apart two attention distributions are
+                <a href="https://en.wikipedia.org/wiki/Effect_size" target="_blank">Cohen's&nbsp;D</a> measures how far
+                apart two attention distributions are
                 (in standard-deviation units): attention under a
                 <strong>visual prompt</strong> vs attention under an
                 <strong>audio prompt</strong>.
@@ -743,11 +762,11 @@
     <section id="alignment" class="section section-alt alignment-section">
       <div class="section-header">
         <h2>Alignment-Aware Tuning</h2>
-        <p>
-          We further tune Qwen2.5-Omni on modality-targeted AVQA pairs built from the
-          two-stage curated MMA-Bench pipeline. This section summarizes the training samples,
-          preprocessing, and how tuning changes the model’s internal attention behaviour.
-        </p>
+        <!-- <p>
+          We further tune Qwen2.5-Omni on modality-targeted QA pairs built from AudioSet's training split
+          filtered using MMABench's Step-1's pipeline. This section summarizes the training samples,
+          preprocessing, and how tuning changes the model's internal attention behaviour.
+        </p> -->
       </div>
 
       <article class="card alignment-pipeline-card">
@@ -774,7 +793,7 @@
           <div class="pipe-step">
             <div class="pipe-icon-badge">❓</div>
             <div class="pipe-label">
-              Dual AVQA pairs<br />
+             Generate QA pairs<br />
               (video- &amp; audio-focused)
             </div>
           </div>
@@ -797,7 +816,7 @@
         </div>
         <p class="alignment-pipeline-caption">
           We start from the <strong>AudioSet training split</strong>, pass it through the same
-          two-stage ontology-based curation used for MMA-Bench (while skipping the LLM
+          two-stage ontology-based curation used for MMA-Bench (skipping the MLLM
           filtering and manual inspection stages), then construct paired visual- and
           audio-focused questions and fine-tune with lightweight LoRA adapters.
         </p>
@@ -818,7 +837,7 @@
                 <div class="sample-title">Video preprocessing</div>
               </div>
               <p class="sample-body">
-                Each clip is rescaled and center-cropped to <strong>504×504</strong>, matching Qwen’s
+                Each clip is rescaled and center-cropped to <strong>504x504</strong>, matching Qwen's
                 TMRoPE patch grid. Frames are sampled at <strong>8&nbsp;FPS</strong> to form a compact
                 visual token sequence used in training.
               </p>
@@ -828,7 +847,7 @@
             <div class="sample-item">
               <div class="sample-header">
                 <div class="sample-icon">❓</div>
-                <div class="sample-title">Paired AVQA prompts</div>
+                <div class="sample-title">Pairing QA prompts with samples</div>
               </div>
               <p class="sample-body">
                 For every clip we create two short QA pairs: one <strong>visual-focused</strong> question about
@@ -846,7 +865,7 @@
               </div>
               <p class="sample-body">
                 From the curated AudioSet train split, we obtain approximately
-                <strong>13k clips</strong> and <strong>≈26k</strong> modality-specified QA pairs, pairing
+                <strong>≈26k</strong> modality-specified QA pairs, pairing
                 every clip with both a visual- and audio-focused question.
               </p>
             </div>
@@ -977,13 +996,59 @@
 }
 </pre>
         </div>
-        <div class="card">
+        <div class="card contact-card">
           <h3>Contact</h3>
-          <p>
-            Project lead &amp; contact information will be added after the review process. For now,
-            please refer to the paper's corresponding author once de-anonymized.
+          <p class="contact-intro">
+            Questions about MMA-Bench, code, or collaboration? Reach out to any of us below.
           </p>
+
+          <!-- Tianle -->
+          <div class="contact-entry">
+            <div class="contact-left">
+              <div class="contact-avatar">TC</div>
+              <div class="contact-meta">
+                <div class="contact-name">Tianle Chen</div>
+                <a class="contact-email" href="mailto:tianle@bu.edu">tianle@bu.edu</a>
+              </div>
+            </div>
+            <button class="contact-copy" type="button" data-email="tianle@bu.edu" aria-label="Copy Tianle's email">
+              <span class="contact-copy-icon">📋</span>
+              <span class="contact-copy-label">Copy</span>
+            </button>
+          </div>
+
+          <!-- Chaitanya -->
+          <div class="contact-entry">
+            <div class="contact-left">
+              <div class="contact-avatar">CC</div>
+              <div class="contact-meta">
+                <div class="contact-name">Chaitanya Chakka</div>
+                <a class="contact-email" href="mailto:chvskch@bu.edu">chvskch@bu.edu</a>
+              </div>
+            </div>
+            <button class="contact-copy" type="button" data-email="chvskch@bu.edu" aria-label="Copy Chaitanya's email">
+              <span class="contact-copy-icon">📋</span>
+              <span class="contact-copy-label">Copy</span>
+            </button>
+          </div>
+
+          <!-- Deepti -->
+          <div class="contact-entry">
+            <div class="contact-left">
+              <div class="contact-avatar">DG</div>
+              <div class="contact-meta">
+                <div class="contact-name">Deepti Ghadiyaram</div>
+                <a class="contact-email" href="mailto:dghadiya@bu.edu">dghadiya@bu.edu</a>
+              </div>
+            </div>
+            <button class="contact-copy" type="button" data-email="dghadiya@bu.edu" aria-label="Copy Deepti's email">
+              <span class="contact-copy-icon">📋</span>
+              <span class="contact-copy-label">Copy</span>
+            </button>
+          </div>
         </div>
+
+
       </div>
     </section>
   </main>
