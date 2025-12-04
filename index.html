@@ -1,204 +1,1073 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <title>MMA-Bench: Some Modalities are More Equal Than Others</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
-    :root {
-      --bg-start: #050816;
-      --bg-end: #9b5b34;
-      --accent: #f5c96b;
-      --accent-soft: rgba(245, 201, 107, 0.12);
-      --text-main: #fdfaf5;
-      --text-soft: #d8d1c5;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      min-height: 100vh;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
-        "Segoe UI", sans-serif;
-      background: radial-gradient(circle at top left, var(--bg-start) 0%, #071a2f 50%, var(--bg-end) 100%);
-      color: var(--text-main);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 32px 16px;
-    }
-    .hero {
-      max-width: 1100px;
-      width: 100%;
-      display: flex;
-      gap: 32px;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .hero-text {
-      flex: 1.1;
-    }
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 4px 12px;
-      border-radius: 999px;
-      background: var(--accent-soft);
-      color: var(--accent);
-      font-size: 0.8rem;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      margin-bottom: 12px;
-    }
-    .pill-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 999px;
-      background: var(--accent);
-      box-shadow: 0 0 12px rgba(245, 201, 107, 0.7);
-    }
-    h1 {
-      font-size: clamp(2.3rem, 3vw + 1rem, 3rem);
-      line-height: 1.1;
-      margin-bottom: 10px;
-    }
-    h1 span.highlight {
-      color: var(--accent);
-    }
-    .subtitle {
-      font-size: 1.05rem;
-      font-weight: 500;
-      color: var(--text-soft);
-      margin-bottom: 18px;
-    }
-    .summary {
-      font-size: 0.95rem;
-      color: var(--text-soft);
-      max-width: 32rem;
-      line-height: 1.5;
-      margin-bottom: 18px;
-    }
-    .bullets {
-      list-style: none;
-      font-size: 0.9rem;
-      color: var(--text-soft);
-      margin-bottom: 22px;
-    }
-    .bullets li {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 6px;
-    }
-    .bullets li::before {
-      content: "•";
-      color: var(--accent);
-      margin-top: 1px;
-    }
-    .buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-    .btn {
-      border: none;
-      border-radius: 999px;
-      padding: 8px 16px;
-      font-size: 0.85rem;
-      font-weight: 500;
-      background: var(--accent);
-      color: #3b2a09;
-      cursor: not-allowed; /* WIP */
-      opacity: 0.8;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .btn span.badge {
-      font-size: 0.7rem;
-      padding: 2px 6px;
-      border-radius: 999px;
-      background: #3b2a09;
-      color: var(--accent);
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-    .hero-image {
-      flex: 1;
-      display: flex;
-      justify-content: center;
-    }
-    .hero-image img {
-      max-width: 100%;
-      border-radius: 18px;
-      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.6);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      object-fit: cover;
-    }
-    .footer {
-      position: fixed;
-      bottom: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 0.8rem;
-      color: rgba(255, 255, 255, 0.6);
-      text-align: center;
-      padding: 4px 10px;
-      border-radius: 999px;
-      background: rgba(0, 0, 0, 0.3);
-      backdrop-filter: blur(12px);
-    }
-    @media (max-width: 880px) {
-      body { padding-top: 40px; padding-bottom: 72px; }
-      .hero { flex-direction: column-reverse; align-items: stretch; }
-      .hero-image img { max-width: 420px; width: 100%; }
-      .hero-text { text-align: left; }
-    }
-  </style>
+  <meta name="description"
+    content="MMA-Bench: Decoding and architecting multimodal integration in MLLMs via controlled modality conflicts, interpretability, and alignment-aware tuning." />
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="icon" type="image/x-icon" href="assets/img/hero.ico" />
 </head>
+
 <body>
-  <main class="hero">
-    <section class="hero-image">
-      <!-- Replace hero.png with your own image filename -->
-      <img src="hero.png" alt="MMA-Bench teaser image" />
+  <!-- Top navigation -->
+  <header class="top-nav">
+    <div class="brand">
+      <span class="brand-mark"></span>
+      <span class="brand-text">MMA-Bench</span>
+    </div>
+    <nav class="nav-links">
+      <a href="#overview">Overview</a>
+      <a href="#mma-bench">Benchmark</a>
+      <a href="#dataset-pipeline">Dataset</a>
+      <a href="#results">Results</a>
+      <a href="#blackbox">Black-Box</a>
+      <a href="#whitebox">White-Box</a>
+      <a href="#alignment">Alignment</a>
+      <a href="#demos">Demos</a>
+      <a href="#resources">Resources</a>
+    </nav>
+  </header>
+
+  <!-- HERO -->
+  <section id="overview" class="hero">
+    <div class="hero-inner">
+      <div class="hero-text">
+        <div class="pill">
+          <span class="pill-dot" aria-hidden="true"></span>
+          <span>MMA-Bench · Project Page</span>
+        </div>
+
+        <h1>
+          Some <span class="highlight">Modalities</span> are More Equal Than Others
+        </h1>
+
+        <!-- <p class="hero-subtitle">
+          Decoding and architecting <strong>multimodal integration</strong> in MLLMs.
+        </p> -->
+
+        <p class="hero-summary">
+          <strong>Multimodal LLMs often fail the moment their sensory inputs disagree.</strong>
+          Despite impressive capabilities, modern MLLMs show strong textual bias, collapse under audio-video conflict,
+          and struggle to identify which modality the user actually wants the model to ground in.
+          <br />
+          MMA-Bench is our effort to <strong>systematically expose and fix</strong> these failure modes.
+          We design controlled audio-video-text conflict scenarios, evaluate models under stress, inspect their internal
+          attention behaviour, and introduce a lightweight alignment-aware tuning method that restores proper modality
+          grounding.
+          <br />
+          Our key finding: <strong>MLLMs do not naturally know when to trust sight, sound, or text when they present
+            conflicting information - but with targeted
+            supervision, they can learn.</strong>
+        </p>
+
+        <div class="hero-contribs">
+          <div class="contrib-item">
+            <h3>Benchmark</h3>
+            <p>Audio-video-text conflicts with paired visual &amp; audio questions per clip.</p>
+          </div>
+          <div class="contrib-item">
+            <h3>Diagnostics</h3>
+            <p>Black-box robustness tests + whitebox layer-wise attention statistical analysis.</p>
+          </div>
+          <div class="contrib-item">
+            <h3>Alignment Tuning</h3>
+            <p>Modality-selective fine-tuning that teaches models when to trust which cue.</p>
+          </div>
+        </div>
+
+        <div class="hero-buttons">
+          <a href="https://arxiv.org/abs/2511.22826" target="_blank" class="btn-link">
+            <button class="btn">Paper<span class="badge">Pre-print</span></button>
+          </a>
+          <button class="btn" disabled>Code<span class="badge">Soon</span></button>
+          <button class="btn" disabled>Data<span class="badge">Soon</span></button>
+          <button class="btn" disabled>MMA-Bench<span class="badge">Soon</span></button>
+        </div>
+      </div>
+
+      <div class="hero-media">
+        <div class="hero-image-frame">
+          <img src="assets/img/hero.png" alt="Illustration of conflicting audio-video-text scenarios in MMA-Bench" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Authors strip -->
+  <section class="authors">
+    <div class="authors-inner">
+      <div class="authors-title">Authors</div>
+
+      <div class="authors-list">
+        Tianle Chen<sup>1,*</sup>,
+        Chaitanya Chakka<sup>1,*</sup>,
+        Arjun Reddy Akula<sup>2</sup>,
+        Xavier Thomas<sup>1</sup>,
+        Deepti Ghadiyaram<sup>1</sup>
+      </div>
+
+      <div class="authors-affiliation">
+        <sup>1</sup> Boston University &nbsp;&nbsp;
+        <sup>2</sup> Google DeepMind
+      </div>
+
+      <div class="authors-affiliation authors-emails">
+        <a href="mailto:tianle@bu.edu">tianle@bu.edu</a>,
+        <a href="mailto:chvskch@bu.edu">chvskch@bu.edu</a>,
+        <a href="mailto:arjunakula@google.com">arjunakula@google.com</a>,
+        <a href="mailto:xthomas@bu.edu">xthomas@bu.edu</a>,
+        <a href="mailto:dghadiya@bu.edu">dghadiya@bu.edu</a>
+      </div>
+
+
+      <div class="authors-affiliation">
+        * Equal contribution
+      </div>
+    </div>
+  </section>
+
+  <section class="authors-ack">
+    <div class="authors-inner authors-ack-inner">
+      <div class="authors-title">Acknowledgement</div>
+      <p class="authors-ack-text">
+        We thank our collaborators and colleagues for their valuable feedback and support
+        throughout this project. We also respectfully acknowledge that
+        <strong>Arjun Reddy Akula</strong> participated in an advisory capacity only.
+      </p>
+    </div>
+  </section>
+
+  <!-- MAIN CONTENT -->
+  <main class="page-main">
+    <!-- MMA-BENCH SCENARIO EXPLORER -->
+    <section id="mma-bench" class="section">
+      <div class="section-header">
+        <h2>MMA-Bench: Controlled Modality Conflicts</h2>
+        <p>
+          MMA-Bench instantiates a small set of canonical audio-video-text conflict patterns.
+          The explorer below mirrors the hero examples in the paper: each scenario shows a clip,
+          a question, and the correct audio- and video-grounded answers.
+        </p>
+      </div>
+
+      <div class="section-grid">
+        <article class="card interactive-card card-full">
+          <h3>Scenario Explorer</h3>
+          <p>
+            Click a scenario to see an example video, the question we ask, and the answers that
+            are correct if the model grounds itself in audio or video.
+          </p>
+
+          <div class="scenario-buttons">
+            <button class="scenario-btn active" data-scenario="baseline">Aligned</button>
+            <button class="scenario-btn" data-scenario="semantic-av">Video≠Audio</button>
+            <button class="scenario-btn" data-scenario="misleading-text">Misleading Text</button>
+            <button class="scenario-btn" data-scenario="long-context">Long Context</button>
+            <!-- <button class="scenario-btn" data-scenario="zero-frames">Frames Zeroed</button>
+            <button class="scenario-btn" data-scenario="silent-audio">Audio Removed</button> -->
+          </div>
+
+          <div class="scenario-layout">
+            <!-- Left: video -->
+            <div class="scenario-player">
+              <div class="scenario-video-frame">
+                <video id="scenario-video" controls preload="metadata">
+                  <source id="scenario-video-source" src="assets/video/scenario_aligned.mp4" type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+            </div>
+
+            <div class="scenario-qa">
+              <div id="scenario-description" class="qa-item qa-desc">
+                <h4>Scenario</h4>
+                <p>
+                  A church bell video with matching bell sounds and neutral text. Both visual and audio
+                  questions have consistent answers; models should behave like ideal multimodal reasoners.
+                </p>
+              </div>
+              <div class="qa-item qa-question">
+                <h4>Question</h4>
+                <p id="scenario-question">
+                  What object is repeatedly making sound in this clip?
+                </p>
+              </div>
+              <div class="qa-item qa-audio">
+                <h4>Audio Answer</h4>
+                <p id="scenario-audio-answer">
+                  A ringing church bell.
+                </p>
+              </div>
+              <div class="qa-item qa-video">
+                <h4>Video Answer</h4>
+                <p id="scenario-video-answer">
+                  A church bell swinging in the tower.
+                </p>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
     </section>
 
-    <section class="hero-text">
-      <div class="pill">
-        <span class="pill-dot"></span>
-        <span>Project page • Work in progress</span>
+    <!-- DATASET PIPELINE: two-step curation -->
+    <section id="dataset-pipeline" class="section section-alt">
+      <div class="section-header">
+        <h2>Dataset Curation Pipeline</h2>
+        <!-- <p>
+          MMA-Bench is built in two stages. First, we apply ontology-driven filtering to clean
+          the AudioSet label space. Second, we run an LLM-based audio-video consistency filter
+          to keep clips with clear, single-source events and then perform futher manual inspection before constructing
+          misaligned pairs.
+        </p> -->
       </div>
 
-      <h1>
-        Some <span class="highlight">Modalities</span> are More Equal Than Others
-      </h1>
-      <div class="subtitle">
-        Decoding and Architecting Multimodal Integration in MLLMs
+      <div class="results-grid results-grid-two">
+        <article class="result-card">
+          <h3>Step 1 — Ontology-Based Filtering</h3>
+          <p class="result-text">
+            We simplify the AudioSet ontology by absorbing overly fine-grained leaves, removing
+            ambiguous, abstract, and restricted nodes, and keeping only visually-grounded,
+            action-bearing classes. This produces a compact ontology well-suited for the task.
+          </p>
+          <div class="results-figure">
+            <img src="assets/img/dataset_pipeline_ontology_step1.png"
+              alt="Two-step ontology-based filtering pipeline" />
+          </div>
+        </article>
+
+        <article class="result-card">
+          <h3>Step 2 — MLLM-Based AV Consistency Filter</h3>
+          <p class="result-text">
+            For each candidate clip, a multimodal LLM judge answers four consistency queries
+            (visual-only, audio-only, and cross-modal) to verify that the same object is both
+            visible and sounding. Clips that pass are then human-verified and used to form
+            aligned / misaligned MMA-Bench pairs.
+          </p>
+          <div class="results-figure">
+            <img src="assets/img/dataset_pipeline_llm_step2.png"
+              alt="LLM-based audio-video consistency filtering pipeline" />
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- RESULTS OVERVIEW -->
+    <section id="results" class="section">
+      <div class="section-header">
+        <h2>Results on MMA-Bench</h2>
+        <p>
+          We evaluate a range of open- and closed-source MLLMs under controlled modality
+          perturbations and report detailed trends across tasks, models, and perturbation types.
+        </p>
       </div>
 
-      <p class="summary">
-        We introduce <strong>MMA-Bench</strong> to probe how modern multimodal LLMs behave when
-        sight, sound, and language conflict. Using both black-box and white-box analysis,
-        we expose brittle modality integration and show how alignment-aware tuning leads
-        to stronger cross-modal grounding and more reliable reasoning.
-      </p>
+      <div class="results-grid">
+        <article class="result-card result-card-wide">
+          <h3>Overall Performance on MMA-Bench</h3>
+          <p class="result-text">
+            Accuracy on audio- and visual-focused questions under aligned and misaligned settings.
+            This table summarizes how often models select the correct modality-specific answer.
+          </p>
+          <table class="results-table">
+            <thead>
+              <tr>
+                <th rowspan="2">Model</th>
+                <th colspan="2">Visual Prompt (%)</th>
+                <th colspan="2">Audio Prompt (%)</th>
+              </tr>
+              <tr>
+                <th>Align</th>
+                <th>Misalign</th>
+                <th>Align</th>
+                <th>Misalign</th>
+              </tr>
+            </thead>
 
-      <ul class="bullets">
-        <li>Benchmark controlled audio-video-text conflicts and unimodal ablations.</li>
-        <li>Diagnose modality bias via performance and interpretability attention patterns.</li>
-        <li>Train models when to prioritize, leverage, or ignore specific modalities.</li>
-        <li>Move towards MLLMs with intrinsically reliable cross-modal reasoning.</li>
-      </ul>
+            <tbody>
+              <!-- Closed-source section -->
+              <tr class="group-header">
+                <td colspan="5"><em>Closed-Source Baselines</em></td>
+              </tr>
 
-      <div class="buttons">
-        <button class="btn">Paper <span class="badge">Soon</span></button>
-        <button class="btn">Code <span class="badge">Soon</span></button>
-        <button class="btn">Data <span class="badge">Soon</span></button>
-        <button class="btn">MMA-Bench <span class="badge">Soon</span></button>
+              <tr>
+                <td>Gemini-2.5-Pro</td>
+                <td><strong>97.90</strong></td>
+                <td><strong>95.28</strong></td>
+                <td>60.37</td>
+                <td>24.95</td>
+              </tr>
+
+              <tr>
+                <td>Gemini-2.0-Flash</td>
+                <td><u>96.71</u></td>
+                <td>91.91</td>
+                <td>57.21</td>
+                <td>9.42</td>
+              </tr>
+
+              <tr>
+                <td>Gemini-2.0-Flash-Lite</td>
+                <td>94.89</td>
+                <td>94.11</td>
+                <td>59.19</td>
+                <td>4.04</td>
+              </tr>
+
+              <!-- Open-source section -->
+              <tr class="group-header">
+                <td colspan="5"><em>Open-Source Baselines</em></td>
+              </tr>
+
+              <tr>
+                <td>Qwen3-Omni-30B-Instruct</td>
+                <td>92.88</td>
+                <td>83.73</td>
+                <td>57.39</td>
+                <td>14.58</td>
+              </tr>
+
+              <tr>
+                <td>Qwen2.5-Omni-7B (Base)</td>
+                <td>76.68</td>
+                <td>58.72</td>
+                <td>46.60</td>
+                <td>25.16</td>
+              </tr>
+
+              <tr>
+                <td>VideoLLaMA2</td>
+                <td>56.35</td>
+                <td>36.11</td>
+                <td>36.12</td>
+                <td>18.46</td>
+              </tr>
+
+              <tr>
+                <td>ChatBridge</td>
+                <td>51.64</td>
+                <td>54.71</td>
+                <td>41.61</td>
+                <td>7.07</td>
+              </tr>
+
+              <tr>
+                <td>PandaGPT</td>
+                <td>28.75</td>
+                <td>29.79</td>
+                <td>13.12</td>
+                <td>1.18</td>
+              </tr>
+
+              <!-- Highlighted row -->
+              <tr class="highlight-row">
+                <td><strong>Qwen2.5-Omni-7B + Ours</strong></td>
+                <td><strong>94.68</strong></td>
+                <td><u>94.37</u></td>
+                <td><strong>88.14</strong></td>
+                <td><strong>79.79</strong></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p class="table-caption">
+            <strong>Benchmarking against State-of-the-Art.</strong>
+            Comparison of our fine-tuned model against a wide range of baselines.
+            <strong>Bold</strong> indicates best performance, <u>underline</u> indicates second best.
+            Our method achieves the highest audio robustness and strong cross-modal consistency under conflict.
+          </p>
+        </article>
+        <div class="results-duo">
+          <article class="result-card">
+            <h3>Textual Bias &amp; Misleading Captions</h3>
+            <p class="result-text">
+              Performance drop when we prepend misleading captions or long irrelevant text, showing
+              how strongly models over-trust language compared to audio-visual evidence.
+            </p>
+            <table class="results-table small-table">
+              <thead>
+                <tr>
+                  <th>Condition</th>
+                  <th>Visual Prompt</th>
+                  <th>Audio Prompt</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <!-- (a) Text Misalignment -->
+                <tr class="group-header">
+                  <td colspan="3"><em>(a) Text Misalignment</em></td>
+                </tr>
+
+                <tr>
+                  <td>Qwen2.5-Omni-7B</td>
+                  <td>37.81</td>
+                  <td>11.98</td>
+                </tr>
+
+                <tr class="highlight-row">
+                  <td>+ Ours (Fine-tuned)</td>
+                  <td>
+                    <strong>91.88</strong>
+                    <span class="delta-up">(+54.07)</span>
+                  </td>
+                  <td>
+                    <strong>28.63</strong>
+                    <span class="delta-up">(+16.65)</span>
+                  </td>
+                </tr>
+
+                <!-- (b) Long Context -->
+                <tr class="group-header">
+                  <td colspan="3"><em>(b) Long Context (10K Tokens)</em></td>
+                </tr>
+
+                <tr>
+                  <td>Qwen2.5-Omni-7B</td>
+                  <td>63.65</td>
+                  <td>34.75</td>
+                </tr>
+
+                <tr class="highlight-row">
+                  <td>+ Ours (Fine-tuned)</td>
+                  <td>
+                    <strong>78.02</strong>
+                    <span class="delta-up">(+14.37)</span>
+                  </td>
+                  <td>
+                    <strong>28.36</strong>
+                    <span class="delta-down">(-6.39)</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <p class="table-caption">
+              <strong>Effect of misleading textual context on Qwen2.5-Omni-7B.</strong>
+              Accuracy before and after modality-aware fine-tuning under:
+              <em>(a)</em> text misalignment (incorrect captions), and
+              <em>(b)</em> long-context (10K irrelevant tokens).
+            </p>
+
+          </article>
+
+          <article class="result-card">
+            <h3>Unimodal Ablations</h3>
+            <p class="result-text">
+              Accuracy when we remove or corrupt one modality at a time (video blacked out or audio
+              muted), revealing brittle integration and lack of abstention.
+            </p>
+            <table class="results-table small-table">
+              <thead>
+                <tr>
+                  <th>Condition</th>
+                  <th>Visual Prompt</th>
+                  <th>Audio Prompt</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <!-- (a) Audio Removed -->
+                <tr class="group-header">
+                  <td colspan="3"><em>(a) Audio Removed</em></td>
+                </tr>
+
+                <tr>
+                  <td>Qwen2.5-Omni-7B</td>
+                  <td>71.49</td>
+                  <td>54.39</td>
+                </tr>
+
+                <tr class="highlight-row">
+                  <td>+ Ours (Fine-tuned)</td>
+                  <td>
+                    <strong>95.30</strong>
+                    <span class="delta-up">(+23.81)</span>
+                  </td>
+                  <td>
+                    <strong>16.17</strong>
+                    <span class="delta-down">(-38.22)</span>
+                  </td>
+                </tr>
+
+                <!-- (b) Frames Zeroed -->
+                <tr class="group-header">
+                  <td colspan="3"><em>(b) Frames Zeroed</em></td>
+                </tr>
+
+                <tr>
+                  <td>Qwen2.5-Omni-7B</td>
+                  <td>45.28</td>
+                  <td>33.74</td>
+                </tr>
+
+                <tr class="highlight-row">
+                  <td>+ Ours (Fine-tuned)</td>
+                  <td>
+                    <strong>8.51</strong>
+                    <span class="delta-down">(-36.77)</span>
+                  </td>
+                  <td>
+                    <strong>82.52</strong>
+                    <span class="delta-up">(+48.78)</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <p class="table-caption">
+              <strong>Unimodal ablation results for Qwen2.5-Omni-7B.</strong>
+              Accuracy (%) before and after modality-aware fine-tuning when one modality is removed.
+            </p>
+
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- BLACK-BOX MODEL COMPARISON -->
+    <section id="blackbox" class="section section-alt">
+      <div class="section-header">
+        <h2>Black-Box Diagnostics Across Models</h2>
+        <p>
+          Use the model selector to inspect how each model behaves under unimodal ablations,
+          semantic AV conflicts, misleading captions, and long-context perturbations. Check out the paper for more
+          in-depth findings!
+        </p>
+      </div>
+
+      <div class="results-model-grid">
+        <!-- Left: selector + hint -->
+        <article class="card interactive-card results-model-left">
+          <h3>Model Comparison Explorer</h3>
+          <!-- <p class="result-text">
+            Select a model to view its robustness profile across the four black-box stress tests.
+          </p> -->
+          <div class="results-model-buttons">
+            <!-- <button class="results-model-btn active" data-model="qwen-tuned">
+              Qwen2.5-Omni (ours tuned)
+            </button> -->
+            <button class="results-model-btn" data-model="qwen-base">
+              Qwen2.5-Omni (base)
+            </button>
+            <button class="results-model-btn" data-model="videollama">
+              VideoLLaMA2
+            </button>
+            <button class="results-model-btn" data-model="gemini_2-0_fl">
+              Gemini-2.0-Flash-Lite
+            </button>
+            <button class="results-model-btn" data-model="pandagpt">
+              PandaGPT
+            </button>
+            <button class="results-model-btn" data-model="chatbridge">
+              ChatBridge
+            </button>
+            <button class="results-model-btn" data-model="qwen3">
+              Qwen3-Omni-30B-Instruct
+            </button>
+            <button class="results-model-btn" data-model="gemini_2_0_f">
+              Gemini-2.0-Flash
+            </button>
+            <button class="results-model-btn" data-model="gemini_2_5_p">
+              Gemini-2.5-Pro
+            </button>
+          </div>
+
+          <!-- <p class="results-model-hint">
+            Each profile shows four views: <strong>Unimodal Ablations</strong>,
+            <strong>Semantic Misalignment</strong>, <strong>Misleading Captions</strong>,
+            and <strong>Long Context</strong>.
+          </p> -->
+        </article>
+
+        <!-- Right: per-model description + 4 small plots -->
+        <article class="card results-model-right">
+          <h3>Robustness Profiles</h3>
+          <p id="results-model-description" class="result-text">
+            Our tuned model maintains high accuracy under aligned conditions and shows the smallest
+            degradation under semantic AV conflicts and misleading text, indicating better modality
+            selectivity and grounding.
+          </p>
+
+          <div class="results-model-plot-grid">
+            <div class="results-model-plot-card">
+              <h4>Unimodal Ablations</h4>
+              <div class="results-figure results-figure-compact">
+                <img id="results-model-img-unimodal" src="assets/img/results_qwen_tuned_unimodal.png"
+                  alt="Unimodal ablation robustness for selected model" />
+              </div>
+            </div>
+
+            <div class="results-model-plot-card">
+              <h4>Semantic Misalignment</h4>
+              <div class="results-figure results-figure-compact">
+                <img id="results-model-img-semantic" src="assets/img/results_qwen_tuned_semantic.png"
+                  alt="Semantic AV misalignment robustness for selected model" />
+              </div>
+            </div>
+
+            <div class="results-model-plot-card">
+              <h4>Misleading Captions</h4>
+              <div class="results-figure results-figure-compact">
+                <img id="results-model-img-text" src="assets/img/results_qwen_tuned_text.png"
+                  alt="Misleading caption robustness for selected model" />
+              </div>
+            </div>
+
+            <div class="results-model-plot-card">
+              <h4>Long Context</h4>
+              <div class="results-figure results-figure-compact">
+                <img id="results-model-img-context" src="assets/img/results_qwen_tuned_context.png"
+                  alt="Long-context robustness for selected model" />
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- WHITE-BOX: QWEN + VIDEOLLAMA -->
+    <section id="whitebox" class="section section-alt">
+      <div class="section-header">
+        <h2>White-Box Attention Diagnostics</h2>
+        <p>
+          Use the model selector to to see their respective attention statistics and heatmaps. Check out the
+          paper for more details!
+      </div>
+
+      <!-- Model selector for white-box (Qwen vs VideoLLaMA) -->
+      <article class="card interactive-card whitebox-card">
+        <h3>Choose Model for White-Box View</h3>
+        <!-- <p>
+          Toggle between Qwen2.5-Omni and VideoLLaMA2 
+        </p> -->
+        <div class="whitebox-model-buttons">
+          <button class="whitebox-model-btn active" data-wmodel="qwen">Qwen2.5-Omni</button>
+          <button class="whitebox-model-btn" data-wmodel="videollama">VideoLLaMA2</button>
+        </div>
+        <div id="whitebox-model-description" class="scenario-description">
+          <h4>Qwen2.5-Omni: Modality Selectivity</h4>
+          <p>
+            Qwen2.5-Omni shows strong textual dominance but exhibits noticeable shifts between
+            audio and video tokens under modality-specific prompts, especially during misalinged samples.
+          </p>
+        </div>
+      </article>
+
+      <div class="results-grid whitebox-grid">
+        <!-- Cohen's D / curves -->
+        <article class="result-card cohen-card">
+          <h3>Cohen's D &amp; Layer-wise Modality Shifts</h3>
+
+          <div class="cohen-layout">
+
+            <!-- LEFT: text -->
+            <div class="cohen-explainer">
+              <p class="result-text">
+                <a href="https://en.wikipedia.org/wiki/Effect_size" target="_blank">Cohen's&nbsp;D</a> measures how far
+                apart two attention distributions are
+                (in standard-deviation units): attention under a
+                <strong>visual prompt</strong> vs attention under an
+                <strong>audio prompt</strong>.
+              </p>
+
+              <div class="cohen-pill-list">
+                <div class="cohen-pill"><strong>D &gt; 0</strong> · visual-prompt attention is higher</div>
+                <div class="cohen-pill"><strong>D &lt; 0</strong> · audio-prompt attention is higher</div>
+                <div class="cohen-pill"><strong>|D| large</strong> · stronger modality shift</div>
+              </div>
+            </div>
+
+            <!-- RIGHT: two side-by-side plots -->
+            <div class="cohen-plots">
+              <div class="cohen-plot">
+                <img id="whitebox-cohen-video" src="assets/img/whitebox_qwen_cohen_video.png"
+                  alt="Cohen's D for video tokens" />
+                <p class="cohen-subcap">
+                  <strong>Video tokens:</strong> D &gt; 0 → higher attention under the visual prompt.
+                </p>
+              </div>
+
+              <div class="cohen-plot">
+                <img id="whitebox-cohen-audio" src="assets/img/whitebox_qwen_cohen_audio.png"
+                  alt="Cohen's D for audio tokens" />
+                <p class="cohen-subcap">
+                  <strong>Audio tokens:</strong> D &lt; 0 → higher attention under the audio prompt.
+                </p>
+              </div>
+            </div>
+
+          </div>
+        </article>
+
+        <!-- Heatmaps -->
+        <article class="result-card">
+          <h3>Attention Heatmaps</h3>
+          <p class="result-text">
+            Representative last layer heatmaps for visual, audio and text tokens. These illustrate where
+            the model actually attends when different modalities are emphasized or misaligned.
+          </p>
+          <div class="results-figure">
+            <img id="whitebox-heatmap-figure" src="assets/img/whitebox_qwen_heatmap.png"
+              alt="Attention heatmaps for Qwen" />
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- INTERPRETIVE FINDINGS -->
+    <section id="findings" class="section">
+      <div class="section-header">
+        <h2>What Do We Learn from MMA-Bench?</h2>
+        <p>
+          We combine black-box evaluation with white-box attention analysis to understand how models
+          actually integrate modalities, not just how they score on classic benchmarks.
+        </p>
+      </div>
+
+      <div class="accordion" data-accordion>
+        <button class="accordion-item" data-accordion-item>
+          <span>Finding 1 — Brittle Modality Integration</span>
+          <span class="accordion-icon">+</span>
+        </button>
+        <div class="accordion-panel">
+          <p>
+            When we remove or ablate a modality (e.g., silence the audio or zero out frames),
+            MLLMs rarely degrade gracefully. Some models lean heavily on vision, others on text, and
+            almost none abstain when the requested evidence is missing.
+          </p>
+        </div>
+
+        <button class="accordion-item" data-accordion-item>
+          <span>Finding 2 — Text and Vision Dominate</span>
+          <span class="accordion-icon">+</span>
+        </button>
+        <div class="accordion-panel">
+          <p>
+            Text tokens absorb most of the attention mass, with visual tokens next and audio last.
+            Misleading captions or long irrelevant context can completely override clear audio-visual
+            cues, mirroring the strong textual attention dominance we observe inside the model.
+          </p>
+        </div>
+
+        <button class="accordion-item" data-accordion-item>
+          <span>Finding 3 — Modality Selectivity Under Conflict</span>
+          <span class="accordion-icon">+</span>
+        </button>
+        <div class="accordion-panel">
+          <p>
+            Using effect sizes between attention distributions under visual vs. audio prompts, we
+            find that models slightly reallocate attention toward the prompted modality, especially in
+            deeper layers — but the shifts are too weak for robust reasoning under conflict until we
+            apply alignment-aware tuning.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ALIGNMENT-AWARE TUNING -->
+    <section id="alignment" class="section section-alt alignment-section">
+      <div class="section-header">
+        <h2>Alignment-Aware Tuning</h2>
+        <!-- <p>
+          We further tune Qwen2.5-Omni on modality-targeted QA pairs built from AudioSet's training split
+          filtered using MMABench's Step-1's pipeline. This section summarizes the training samples,
+          preprocessing, and how tuning changes the model's internal attention behaviour.
+        </p> -->
+      </div>
+
+      <article class="card alignment-pipeline-card">
+        <h3>Training Pipeline Overview</h3>
+        <div class="alignment-pipeline">
+          <div class="pipe-step">
+            <div class="pipe-icon-badge">🎞️</div>
+            <div class="pipe-label">
+              Filtered training data
+            </div>
+            <!-- <div class="pipe-sub">
+              (no LLM filtering or manual inspection)
+            </div> -->
+          </div>
+          <div class="pipe-arrow">➜</div>
+          <div class="pipe-step">
+            <div class="pipe-icon-badge">🧩</div>
+            <div class="pipe-label">
+              Process videos into<br />
+              8&nbsp;FPS, 504x504 frames
+            </div>
+          </div>
+          <div class="pipe-arrow">➜</div>
+          <div class="pipe-step">
+            <div class="pipe-icon-badge">❓</div>
+            <div class="pipe-label">
+              Generate QA pairs<br />
+              (video- &amp; audio-focused)
+            </div>
+          </div>
+          <!-- <div class="pipe-arrow">➜</div>
+          <div class="pipe-step">
+            <div class="pipe-icon-badge">🏷️</div>
+            <div class="pipe-label">
+              Modality tags<br />
+              [VIDEO] / [AUDIO]
+            </div>
+          </div> -->
+          <div class="pipe-arrow">➜</div>
+          <div class="pipe-step">
+            <div class="pipe-icon-badge">⚙️</div>
+            <div class="pipe-label">
+              LoRA SFT on W<sub>Q</sub>, W<sub>V</sub><br />
+              (backbone frozen)
+            </div>
+          </div>
+        </div>
+        <p class="alignment-pipeline-caption">
+          We start from the <strong>AudioSet training split</strong>, pass it through the same
+          two-stage ontology-based curation used for MMA-Bench (skipping the MLLM
+          filtering and manual inspection stages), then construct paired visual- and
+          audio-focused questions and fine-tune with lightweight LoRA adapters.
+        </p>
+      </article>
+
+
+      <!-- Lower grid: sample format + training / attention -->
+      <div class="alignment-grid">
+        <!-- Left: what a training sample looks like -->
+        <article class="card alignment-sample-card">
+          <h3>What a Training Sample Looks Like</h3>
+
+          <div class="alignment-sample-list">
+            <!-- Item 1: video processing -->
+            <div class="sample-item">
+              <div class="sample-header">
+                <div class="sample-icon">🎞️</div>
+                <div class="sample-title">Video preprocessing</div>
+              </div>
+              <p class="sample-body">
+                Each clip is rescaled and center-cropped to <strong>504x504</strong>, matching Qwen's
+                TMRoPE patch grid. Frames are sampled at <strong>8&nbsp;FPS</strong> to form a compact
+                visual token sequence used in training.
+              </p>
+            </div>
+
+            <!-- Item 2: paired AVQA prompts -->
+            <div class="sample-item">
+              <div class="sample-header">
+                <div class="sample-icon">❓</div>
+                <div class="sample-title">Pairing QA prompts with samples</div>
+              </div>
+              <p class="sample-body">
+                For every clip we create two short QA pairs: one <strong>visual-focused</strong> question about
+                what is seen, and one <strong>audio-focused</strong> question about what is heard. The same
+                video is reused, but each prompt explicitly asks the model to ground its answer in a single
+                modality.
+              </p>
+            </div>
+
+            <!-- Item 3: dataset size -->
+            <div class="sample-item">
+              <div class="sample-header">
+                <div class="sample-icon">📊</div>
+                <div class="sample-title">Training set size</div>
+              </div>
+              <p class="sample-body">
+                From the curated AudioSet train split, we obtain approximately
+                <strong>≈26k</strong> modality-specified QA pairs, pairing
+                every clip with both a visual- and audio-focused question.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Right: fine-tuning + attention reallocation -->
+        <article class="card alignment-training-card">
+          <h3>Attention Reallocation Effect</h3>
+
+          <!-- <p class="result-text">
+            We visualize Cohen&rsquo;s&nbsp;D between attention on video tokens under visual vs.
+            audio prompts (misaligned case). Larger absolute values indicate stronger separation
+            between the two behaviours.
+          </p> -->
+
+          <!-- Single Cohen's D plot (Fig. 10c style) -->
+          <div class="attn-plot-single">
+            <img src="assets/img/post_training_vid_misaligned.png"
+              alt="Layer-wise Cohen's D for video tokens in the misaligned setting, before and after tuning" />
+          </div>
+
+          <!-- Numeric summary bars -->
+          <div class="attn-bars">
+            <div class="attn-bar">
+              <div class="attn-bar-label">Maximum Cohen's-D before tuning - 0.6</div>
+
+              <div class="attn-bar-axis">
+                <span class="attn-axis-left">0</span>
+
+                <div class="attn-bar-track">
+                  <div class="attn-bar-fill attn-before" style="width:30%;"></div>
+                </div>
+
+                <span class="attn-axis-right">2</span>
+              </div>
+            </div>
+
+            <div class="attn-bar">
+              <div class="attn-bar-label">Maximum Cohen's-D after tuning - 1.6</div>
+
+              <div class="attn-bar-axis">
+                <span class="attn-axis-left">0</span>
+
+                <div class="attn-bar-track">
+                  <div class="attn-bar-fill attn-after" style="width:80%;"></div>
+                </div>
+
+                <span class="attn-axis-right">2</span>
+              </div>
+            </div>
+
+          </div>
+
+          <p class="result-text">
+            The jump in Cohen's-D magnitudes after training shows that alignment-aware tuning changes
+            internal attention behaviour: the model reallocates substantially more attention
+            toward the queried modality instead of keeping mixed, low-contrast patterns.
+          </p>
+        </article>
+
+
+      </div>
+    </section>
+
+    <!-- DEMO GALLERY -->
+    <section id="demos" class="section">
+      <div class="section-header">
+        <h2>Qualitative Demo Gallery</h2>
+        <p>
+          Semantic AV misalignment examples where our tuned model
+          <strong>demonstrates robust grounding in the requested sensory input</strong>.
+          Each clip is shown once; the rows below compare the baseline Qwen2.5-Omni-7B
+          prediction to our alignment-aware tuned model.
+        </p>
+      </div>
+
+      <div class="demo-shell">
+        <div class="demo-shell-header">
+          <div>
+            <p class="demo-shell-title">Semantic Misalignment Examples</p>
+            <p class="demo-shell-sub">
+              Toggle between <strong>audio-prompt</strong> and
+              <strong>visual-prompt</strong> questions. Text-prompt demos coming soon.
+            </p>
+          </div>
+          <div class="toggle-group demo-toggle-group">
+            <button class="toggle-btn active" data-demo-split="audio">
+              Audio-prompt
+            </button>
+            <button class="toggle-btn" data-demo-split="visual">
+              Visual-prompt
+            </button>
+            <button class="toggle-btn" disabled title="Coming soon">
+              Text-prompt (WIP)
+            </button>
+          </div>
+        </div>
+
+        <div id="demo-gallery" class="demo-gallery-grid">
+          <!-- cards are injected from JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- RESOURCES -->
+    <section id="resources" class="section">
+      <div class="section-header">
+        <h2>Resources &amp; BibTeX</h2>
+        <p>
+          Links will be updated as the project is released. For now, you can cite the MMA-Bench
+          paper as:
+        </p>
+      </div>
+
+      <div class="resources-grid">
+        <div class="card">
+          <h3>BibTeX</h3>
+          <pre class="bibtex">
+              @misc{chen2025modalitiesequalothersdecoding,
+                    title={Some Modalities are More Equal Than Others: Decoding and Architecting Multimodal Integration in MLLMs}, 
+                    author={Tianle Chen and Chaitanya Chakka and Arjun Reddy Akula and Xavier Thomas and Deepti Ghadiyaram},
+                    year={2025},
+                    eprint={2511.22826},
+                    archivePrefix={arXiv},
+                    primaryClass={cs.CV},
+                    url={https://arxiv.org/abs/2511.22826}, 
+              }
+              </pre>
+        </div>
+        <div class="card contact-card">
+          <h3>Contact</h3>
+          <p class="contact-intro">
+            Questions about MMA-Bench, code, or collaboration? Reach out to any of us below.
+          </p>
+
+          <!-- Tianle -->
+          <div class="contact-entry">
+            <div class="contact-left">
+              <div class="contact-avatar">TC</div>
+              <div class="contact-meta">
+                <div class="contact-name">Tianle Chen</div>
+                <a class="contact-email" href="mailto:tianle@bu.edu">tianle@bu.edu</a>
+              </div>
+            </div>
+            <button class="contact-copy" type="button" data-email="tianle@bu.edu" aria-label="Copy Tianle's email">
+              <span class="contact-copy-icon">📋</span>
+              <span class="contact-copy-label">Copy</span>
+            </button>
+          </div>
+
+          <!-- Chaitanya -->
+          <div class="contact-entry">
+            <div class="contact-left">
+              <div class="contact-avatar">CC</div>
+              <div class="contact-meta">
+                <div class="contact-name">Chaitanya Chakka</div>
+                <a class="contact-email" href="mailto:chvskch@bu.edu">chvskch@bu.edu</a>
+              </div>
+            </div>
+            <button class="contact-copy" type="button" data-email="chvskch@bu.edu" aria-label="Copy Chaitanya's email">
+              <span class="contact-copy-icon">📋</span>
+              <span class="contact-copy-label">Copy</span>
+            </button>
+          </div>
+
+          <!-- Deepti -->
+          <div class="contact-entry">
+            <div class="contact-left">
+              <div class="contact-avatar">DG</div>
+              <div class="contact-meta">
+                <div class="contact-name">Deepti Ghadiyaram</div>
+                <a class="contact-email" href="mailto:dghadiya@bu.edu">dghadiya@bu.edu</a>
+              </div>
+            </div>
+            <button class="contact-copy" type="button" data-email="dghadiya@bu.edu" aria-label="Copy Deepti's email">
+              <span class="contact-copy-icon">📋</span>
+              <span class="contact-copy-label">Copy</span>
+            </button>
+          </div>
+        </div>
+
+
       </div>
     </section>
   </main>
 
-  <div class="footer">
-    MMA-Bench · Multimodal Alignment Benchmark (WIP)
-  </div>
+  <footer class="site-footer">
+    <p>MMA-Bench · Multimodal Alignment Benchmark · Project page</p>
+  </footer>
+
+  <script src="assets/js/main.js"></script>
 </body>
+
 </html>
