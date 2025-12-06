@@ -1706,3 +1706,41 @@ h1 {
   margin: 0 auto;
 }
 
+/* Hero buttons – hover + disabled polish */
+
+.hero-buttons .btn {
+  border: 1px solid rgba(125, 249, 255, 0.55);
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.12s ease,
+    opacity 0.15s ease;
+}
+
+/* Glow + slight lift on hover */
+.hero-buttons .btn:hover:not(:disabled) {
+  border-color: rgba(125, 249, 255, 0.95);
+  box-shadow: 0 0 14px rgba(125, 249, 255, 0.4);
+  transform: translateY(-1px);
+}
+
+/* Ghost style for the disabled "Code" button */
+.hero-buttons .btn.btn-ghost {
+  background: transparent;
+  color: rgba(226, 232, 240, 0.9);
+  border-color: rgba(148, 163, 184, 0.7);
+}
+
+.hero-buttons .btn:disabled {
+  cursor: default;
+  opacity: 0.6;
+  box-shadow: none;
+  transform: none;
+}
+
+.hero-buttons .btn.btn-ghost .badge {
+  background: rgba(15, 23, 42, 0.5);
+  color: rgba(148, 163, 184, 0.95);
+}
