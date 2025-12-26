@@ -5,7 +5,7 @@
 [![arXiv](https://img.shields.io/badge/arXiv-2511-22826.svg)](https://arxiv.org/abs/2511.22826)
 [![Project Page](https://img.shields.io/badge/Project-Website-blue)](https://cskyl.github.io/MMA-Bench/)
 [![HuggingFace Dataset](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-MMA--Bench-orange)](https://huggingface.co/datasets/dghadiya/MMA-Bench)
-[![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fcskyl%2FMMA-Bench&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com)
+<!-- [![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fcskyl%2FMMA-Bench&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com) -->
 
 **Tianle Chen**<sup>1*</sup>, **Chaitanya Chakka**<sup>1*</sup>, **Arjun Reddy Akula**<sup>2</sup>, **Xavier Thomas**<sup>1</sup>, **Deepti Ghadiyaram**<sup>1</sup>
 
